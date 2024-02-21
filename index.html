@@ -69,6 +69,51 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vscode连接不上vmware" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/02/21/vscode%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8Avmware/" class="article-date">
+  <time class="dt-published" datetime="2024-02-21T04:46:49.178Z" itemprop="datePublished">2024-02-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<p>title: “vscode连接不上vmware”<br>##报错现象<br>有时，我们在ssh连接到某台server时，会出现REMOTE HOST IDENTIFICATION HAS CHANGED报错，比如:</p>
+<p>##出现原因<br>WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!</p>
+<p>翻译过来就是 警告：远程主机标识已更改！</p>
+<p>此报错是由于远程的主机的公钥发生了变化导致的。</p>
+<p>ssh服务是通过公钥和私钥来进行连接的，它会把每个曾经访问过计算机或服务器的公钥（public key），记录在~&#x2F;.ssh&#x2F;known_hosts 中，当下次访问曾经访问过的计算机或服务器时，ssh就会核对公钥，如果和上次记录的不同，OpenSSH会发出警告。</p>
+<p>##解决方案<br>使用命令清除所连接的IP或hostname</p>
+<p>ssh-keygen -R XX.XX.XX.XX<br>其中，XX.XX.XX.XX为之前连接时的网段IP</p>
+<p>E.G</p>
+<p>重新连接：</p>
+<p>出现一句:Are you sure you want to continue connecting (yes&#x2F;no&#x2F;[fingerprint])? yes</p>
+<p>连接成功！</p>
+<p>date: 2024-02-21T12:46:49<br>tags:</p>
+<ul>
+<li>SSH</li>
+<li>连接问题</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/02/21/vscode%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8Avmware/" data-id="clsvc23eb0000b0usad8ye158" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-我的第一篇文章" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/02/21/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" class="article-date">
@@ -187,6 +232,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/02/21/vscode%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8Avmware/">(no title)</a>
+          </li>
         
           <li>
             <a href="/2024/02/21/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">我的第一篇文章</a>
