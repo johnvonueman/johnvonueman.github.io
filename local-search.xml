@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>物理机qt程序连接虚拟机服务器连不上</title>
+    <link href="/2024/05/04/%E7%89%A9%E7%90%86%E6%9C%BAqt%E7%A8%8B%E5%BA%8F%E8%BF%9E%E6%8E%A5%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9E%E4%B8%8D%E4%B8%8A/"/>
+    <url>/2024/05/04/%E7%89%A9%E7%90%86%E6%9C%BAqt%E7%A8%8B%E5%BA%8F%E8%BF%9E%E6%8E%A5%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9E%E4%B8%8D%E4%B8%8A/</url>
+    
+    <content type="html"><![CDATA[<p>#qt程序连不上虚拟机的服务器</p><p>##只需要将服务器的ip设为0.0.0.0即可，这样才能够允许端口被访问</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>调用ffmpeg转化格式，问题汇总</title>
     <link href="/2024/02/22/136243240/"/>
     <url>/2024/02/22/136243240/</url>
