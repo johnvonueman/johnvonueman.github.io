@@ -16,15 +16,15 @@
   <meta name="author" content="Zhupanpan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="#qt程序连不上虚拟机的服务器 ##只需要将服务器的ip设为0.0.0.0即可，这样才能够允许端口被访问">
+    <meta name="description" content="sync.map原理赏析sync.map底层结构​        主要是由两个map分工协作，一个是read map,一个是dirty map。其中read map负责将读，更新，删除操作的流量替dirty挡下来，dirty map为read map进行兜底。read map通过原子操作进行读，更新，删除，与锁相比更轻量化。 123456789101112type Map struct &amp;#123">
 <meta property="og:type" content="article">
-<meta property="og:title" content="物理机qt程序连接虚拟机服务器连不上">
-<meta property="og:url" content="http://example.com/2024/05/04/%E7%89%A9%E7%90%86%E6%9C%BAqt%E7%A8%8B%E5%BA%8F%E8%BF%9E%E6%8E%A5%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9E%E4%B8%8D%E4%B8%8A/index.html">
+<meta property="og:title" content="sync.map原理赏析">
+<meta property="og:url" content="http://example.com/2024/07/12/sync-map%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/index.html">
 <meta property="og:site_name" content="我超爱编程">
-<meta property="og:description" content="#qt程序连不上虚拟机的服务器 ##只需要将服务器的ip设为0.0.0.0即可，这样才能够允许端口被访问">
+<meta property="og:description" content="sync.map原理赏析sync.map底层结构​        主要是由两个map分工协作，一个是read map,一个是dirty map。其中read map负责将读，更新，删除操作的流量替dirty挡下来，dirty map为read map进行兜底。read map通过原子操作进行读，更新，删除，与锁相比更轻量化。 123456789101112type Map struct &amp;#123">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-05-04T05:15:11.000Z">
-<meta property="article:modified_time" content="2024-05-04T05:18:21.384Z">
+<meta property="article:published_time" content="2024-07-12T04:20:11.000Z">
+<meta property="article:modified_time" content="2024-07-12T04:40:46.137Z">
 <meta property="article:author" content="Zhupanpan">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -32,7 +32,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>物理机qt程序连接虚拟机服务器连不上 - 我超爱编程</title>
+  <title>sync.map原理赏析 - 我超爱编程</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -227,7 +227,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="物理机qt程序连接虚拟机服务器连不上"></span>
+            <span id="subtitle" data-typed-text="sync.map原理赏析"></span>
           
         </div>
 
@@ -238,8 +238,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-05-04 13:15" pubdate>
-          2024年5月4日 下午
+        <time datetime="2024-07-12 12:20" pubdate>
+          2024年7月12日 中午
         </time>
       </span>
     
@@ -250,7 +250,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          41 字
+          337 字
         
       </span>
     
@@ -261,7 +261,7 @@
         
         
         
-          1 分钟
+          3 分钟
         
       </span>
     
@@ -306,13 +306,21 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">物理机qt程序连接虚拟机服务器连不上</h1>
+            <h1 id="seo-header">sync.map原理赏析</h1>
             
             
               <div class="markdown-body">
                 
-                <p>#qt程序连不上虚拟机的服务器</p>
-<p>##只需要将服务器的ip设为0.0.0.0即可，这样才能够允许端口被访问</p>
+                <h1 id="sync-map原理赏析"><a href="#sync-map原理赏析" class="headerlink" title="sync.map原理赏析"></a>sync.map原理赏析</h1><h2 id="sync-map底层结构"><a href="#sync-map底层结构" class="headerlink" title="sync.map底层结构"></a>sync.map底层结构</h2><p>​        主要是由两个map分工协作，一个是read map,一个是dirty map。其中read map负责将读，更新，删除操作的流量替dirty挡下来，dirty map为read map进行兜底。read map通过原子操作进行读，更新，删除，与锁相比更轻量化。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Map <span class="hljs-keyword">struct</span> &#123;<span class="hljs-comment">// 互斥锁，保证dirty map 和 misses的并发安全</span><br>    mu sync.Mutex<span class="hljs-comment">// 无锁化的read map（小林服务器）</span><br>    read atomic.Value <span class="hljs-comment">// readOnly// 读写需要加锁的map（诸葛青服务器）</span><br>    dirty <span class="hljs-keyword">map</span>[<span class="hljs-keyword">interface</span>&#123;&#125;]*entry<span class="hljs-comment">// 记录有多少次读、删请求 找了诸葛青</span><br>    misses <span class="hljs-type">int</span><br>&#125;<br><span class="hljs-keyword">type</span> readOnly <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-comment">// read map 存放 k-v的实体</span><br>    m <span class="hljs-keyword">map</span>[<span class="hljs-keyword">interface</span>&#123;&#125;]*entry<br>    <span class="hljs-comment">// 标识是否有 数据缺失，即dirty map里面有 read map中没有的key，就是amended为true</span><br>    amended <span class="hljs-type">bool</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="双向数据流转操作"><a href="#双向数据流转操作" class="headerlink" title="双向数据流转操作"></a>双向数据流转操作</h2><p>​       主要负责数据同步吧，当访问read map的miss超过一定数量时，就会将dirty map的值赋给read map,然后将dirty map置空，当访问dirty map时如果dirty map为空，将read map拷贝一份给dirty map。</p>
+<h2 id="为什么要有nil和expunged状态"><a href="#为什么要有nil和expunged状态" class="headerlink" title="为什么要有nil和expunged状态"></a>为什么要有nil和expunged状态</h2><p>nil:删除数据时，通过read map就可以软删除，减少锁的使用</p>
+<p>expunged：标记键值对是否存在于dirty map</p>
+<h2 id="sync-Map适用场景"><a href="#sync-Map适用场景" class="headerlink" title="sync.Map适用场景"></a>sync.Map适用场景</h2><p>读多，更新多，删除多，写少</p>
+<h2 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h2><p>不适合写操作多的场景</p>
+<p>数据流传的时候，将read map复制到dirty map时间复杂度O(n),比较耗时</p>
+<p>可以使用分段锁替代</p>
 
                 
               </div>
@@ -320,6 +328,27 @@
             <hr/>
             <div>
               <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/go%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E9%89%B4%E8%B5%8F/" class="category-chain-item">go底层原理鉴赏</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
   
   
 </div>
@@ -330,8 +359,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>物理机qt程序连接虚拟机服务器连不上</div>
-      <div>http://example.com/2024/05/04/物理机qt程序连接虚拟机服务器连不上/</div>
+      <div>sync.map原理赏析</div>
+      <div>http://example.com/2024/07/12/sync-map原理赏析/</div>
     </div>
     <div class="license-meta">
       
@@ -343,7 +372,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年5月4日</div>
+          <div>2024年7月12日</div>
         </div>
       
       
@@ -375,18 +404,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/10/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" title="二分查找">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">二分查找</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/02/22/136243240/" title="调用ffmpeg转化格式，问题汇总">
-                        <span class="hidden-mobile">调用ffmpeg转化格式，问题汇总</span>
+                      <a href="/2024/07/11/%E9%95%BF%E5%BA%A6%E6%9C%80%E5%B0%8F%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84/" title="长度最小的子数组">
+                        <span class="hidden-mobile">长度最小的子数组</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

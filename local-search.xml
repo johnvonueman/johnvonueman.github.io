@@ -4,6 +4,120 @@
   
   
   <entry>
+    <title>sync.map原理赏析</title>
+    <link href="/2024/07/12/sync-map%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/"/>
+    <url>/2024/07/12/sync-map%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/</url>
+    
+    <content type="html"><![CDATA[<h1 id="sync-map原理赏析"><a href="#sync-map原理赏析" class="headerlink" title="sync.map原理赏析"></a>sync.map原理赏析</h1><h2 id="sync-map底层结构"><a href="#sync-map底层结构" class="headerlink" title="sync.map底层结构"></a>sync.map底层结构</h2><p>​        主要是由两个map分工协作，一个是read map,一个是dirty map。其中read map负责将读，更新，删除操作的流量替dirty挡下来，dirty map为read map进行兜底。read map通过原子操作进行读，更新，删除，与锁相比更轻量化。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Map <span class="hljs-keyword">struct</span> &#123;<span class="hljs-comment">// 互斥锁，保证dirty map 和 misses的并发安全</span><br>    mu sync.Mutex<span class="hljs-comment">// 无锁化的read map（小林服务器）</span><br>    read atomic.Value <span class="hljs-comment">// readOnly// 读写需要加锁的map（诸葛青服务器）</span><br>    dirty <span class="hljs-keyword">map</span>[<span class="hljs-keyword">interface</span>&#123;&#125;]*entry<span class="hljs-comment">// 记录有多少次读、删请求 找了诸葛青</span><br>    misses <span class="hljs-type">int</span><br>&#125;<br><span class="hljs-keyword">type</span> readOnly <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-comment">// read map 存放 k-v的实体</span><br>    m <span class="hljs-keyword">map</span>[<span class="hljs-keyword">interface</span>&#123;&#125;]*entry<br>    <span class="hljs-comment">// 标识是否有 数据缺失，即dirty map里面有 read map中没有的key，就是amended为true</span><br>    amended <span class="hljs-type">bool</span><br>&#125;<br></code></pre></td></tr></table></figure><h2 id="双向数据流转操作"><a href="#双向数据流转操作" class="headerlink" title="双向数据流转操作"></a>双向数据流转操作</h2><p>​       主要负责数据同步吧，当访问read map的miss超过一定数量时，就会将dirty map的值赋给read map,然后将dirty map置空，当访问dirty map时如果dirty map为空，将read map拷贝一份给dirty map。</p><h2 id="为什么要有nil和expunged状态"><a href="#为什么要有nil和expunged状态" class="headerlink" title="为什么要有nil和expunged状态"></a>为什么要有nil和expunged状态</h2><p>nil:删除数据时，通过read map就可以软删除，减少锁的使用</p><p>expunged：标记键值对是否存在于dirty map</p><h2 id="sync-Map适用场景"><a href="#sync-Map适用场景" class="headerlink" title="sync.Map适用场景"></a>sync.Map适用场景</h2><p>读多，更新多，删除多，写少</p><h2 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h2><p>不适合写操作多的场景</p><p>数据流传的时候，将read map复制到dirty map时间复杂度O(n),比较耗时</p><p>可以使用分段锁替代</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>go底层原理鉴赏</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>长度最小的子数组</title>
+    <link href="/2024/07/11/%E9%95%BF%E5%BA%A6%E6%9C%80%E5%B0%8F%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84/"/>
+    <url>/2024/07/11/%E9%95%BF%E5%BA%A6%E6%9C%80%E5%B0%8F%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84/</url>
+    
+    <content type="html"><![CDATA[<h1 id="长度最小的子数组"><a href="#长度最小的子数组" class="headerlink" title="长度最小的子数组"></a>长度最小的子数组</h1><h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>滑动窗口</p><ol><li>end指针往后滑动，直到找到总和大于target的</li><li>此时，start往后移动，缩小子数组范围</li><li>记录子数组长度，返回最小</li></ol><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">minSubArrayLen</span><span class="hljs-params">(target <span class="hljs-type">int</span>, nums []<span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> &#123;<br><span class="hljs-comment">//滑动窗口，后面的指针一直往后移动，前面的指针，也往前移动</span><br> sum:=<span class="hljs-number">0</span><br> n:=<span class="hljs-built_in">len</span>(nums)<br> start:=<span class="hljs-number">0</span><br> length:=n+<span class="hljs-number">1</span><br> <span class="hljs-keyword">for</span> end:=<span class="hljs-number">0</span>;end&lt;n;end++&#123;<br>    sum+=nums[end]<span class="hljs-comment">//目前位置，前一段总和</span><br><br>    <span class="hljs-keyword">for</span> sum&gt;=target&#123;<br>      length=min(length,end-start+<span class="hljs-number">1</span>)<br>      sum-=nums[start]<br>      start++<br>    &#125;<br><br> &#125;<br><span class="hljs-keyword">if</span> length==n+<span class="hljs-number">1</span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>&#125;<br><span class="hljs-keyword">return</span> length<br>&#125;<br><br><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>有序数组平方</title>
+    <link href="/2024/07/11/%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E5%B9%B3%E6%96%B9/"/>
+    <url>/2024/07/11/%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E5%B9%B3%E6%96%B9/</url>
+    
+    <content type="html"><![CDATA[<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">sortedSquares</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> []<span class="hljs-type">int</span> &#123;<br>    n:=<span class="hljs-built_in">len</span>(nums)<br>    ans:=<span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>,n)<br>    <span class="hljs-comment">//从两边开始，倒着,平方大的拍后边</span><br>    l:=<span class="hljs-number">0</span><br>    r:=n<span class="hljs-number">-1</span><br>    index:=n<span class="hljs-number">-1</span><br>    <span class="hljs-keyword">for</span> l&lt;=r&#123;<br>       <span class="hljs-keyword">if</span> nums[l]*nums[l]&gt;=nums[r]*nums[r]&#123;<br>        ans[index]=nums[l]*nums[l]<br>        l++<br>        index--<br>       &#125;<span class="hljs-keyword">else</span> &#123;<br>        ans[index]=nums[r]*nums[r]<br>        r--<br>        index--<br>       &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> ans<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>golang中map赏析</title>
+    <link href="/2024/07/11/golang%E4%B8%ADmap%E8%B5%8F%E6%9E%90/"/>
+    <url>/2024/07/11/golang%E4%B8%ADmap%E8%B5%8F%E6%9E%90/</url>
+    
+    <content type="html"><![CDATA[<h1 id="golang中map实现原理"><a href="#golang中map实现原理" class="headerlink" title="golang中map实现原理"></a>golang中map实现原理</h1><h2 id="map数据结构"><a href="#map数据结构" class="headerlink" title="map数据结构"></a>map数据结构</h2><p>&emsp;      go语言中map是通过哈希表来实现的，其map是一个指向hmap的指针，具体细节如下图</p><p><img src="C:\Users\1\AppData\Roaming\Typora\typora-user-images\image-20240711192059942.png" alt="image-20240711192059942"></p><p>下面是关键字段解释</p><table><thead><tr><th align="center">字段名称</th><th align="center">含义</th></tr></thead><tbody><tr><td align="center">count</td><td align="center">键值对对数</td></tr><tr><td align="center">*buckets</td><td align="center">指向存储桶的数组</td></tr><tr><td align="center">*extra</td><td align="center">指向溢出桶</td></tr></tbody></table><h2 id="map访问元素的过程"><a href="#map访问元素的过程" class="headerlink" title="map访问元素的过程"></a>map访问元素的过程</h2><ol><li><p>检查map是否为空或者无数据，如果为空或者无数据，返回空值</p></li><li><p>检查map是否是写状态，是的话，panic</p></li><li><p>计算hash值和掩码</p></li><li><p>判断当前map是否处于扩容，如果是，执行以下步骤</p><ul><li>判断该桶是否被迁移</li><li>被迁移，在新桶中查找</li><li>不被迁移，在旧桶中查找</li><li>根据掩码找到位置</li></ul></li><li><p>遍历桶以及溢出桶来查找key</p><ul><li>遍历桶的8个槽位</li><li>比较tophash<ul><li>相同，比较key，key相同，返回对应value</li><li>不相同，看当前槽位状态是否为“后继空状态”<ul><li>是，查找不到，返回零值</li><li>不是，查找下一个槽位</li></ul></li></ul></li></ul></li><li><p>如果当前桶没有找到，以同样方式遍历溢出桶</p></li></ol><h2 id="map赋值"><a href="#map赋值" class="headerlink" title="map赋值"></a>map赋值</h2><h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol><li>初始化之后再赋值</li><li>map非线程安全，不支持并发读写</li></ol><h3 id="赋值过程"><a href="#赋值过程" class="headerlink" title="赋值过程"></a>赋值过程</h3><ol><li><p>写检测</p></li><li><p>计算对应hash值，将map置为写状态</p></li><li><p>判断桶数组是否是空，如果是，初始化</p></li><li><p>查找目标桶</p><p>a. 根据hash找到桶位置</p><p>b. 判断当前桶是否在扩容</p><p>​    i. 如果在扩容，迁移这个桶</p><p>c. 获取目标桶指针，计算tophash</p></li><li><p>遍历桶以及溢出桶来查找key</p><ul><li>遍历桶的8个槽位</li><li>比较tophash<ul><li>相同，比较key，key相同，更新对应value</li><li>不相同，看当前槽位状态是否为“后继空状态”<ul><li>是，在这个位置插入key&#x2F;value</li><li>不是，查找下一个槽位</li></ul></li></ul></li></ul></li><li><p>插入</p><ul><li>没找到对应的槽位，并且桶及溢出桶都满了，申请新的溢出桶进行插入</li><li>否则在找到的位置插入</li></ul></li><li><p>收尾</p><ul><li>判断写状态</li><li>清除写状态</li></ul></li></ol><h2 id="map扩容"><a href="#map扩容" class="headerlink" title="map扩容"></a>map扩容</h2><h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><p>​      溢出桶数量过多：单倍扩容</p><p>​      装填因子大于6.5：双倍扩容</p><h3 id="扩容过程"><a href="#扩容过程" class="headerlink" title="扩容过程"></a>扩容过程</h3><p>​       扩容过程中大概需要用到两个函数，hashGrow()和growWork()。其中hashGrow()函数只是分配新的 buckets，并将老的 buckets 挂到了 oldbuckets 字段上，并未参与真正的数据迁移，而数据迁移的功能是由growWork()函数完成的。</p><h3 id="迁移时机"><a href="#迁移时机" class="headerlink" title="迁移时机"></a>迁移时机</h3><p>​    growWork() 函数会在 mapassign 和 mapdelete 函数中被调用，所以数据的迁移过程一般发生在插入或修改、删除 key 的时候。在扩容完毕后（预分配内存），不会马上就进行迁移。而是采取写时复制的方式，当有访问到具体 bukcet 时，才会逐渐的将 oldbucket 迁移到 新bucket中。</p><h2 id="map删除"><a href="#map删除" class="headerlink" title="map删除"></a>map删除</h2><p>​    map的delete原理很简单，其核心代码位于runtime.mapdelete函数中，这里就不贴完整函数了，删除动作前整体逻辑和前面map的访问差不多，也是map的写检测，以及寻找bucket和key的过程。如果在找到了目标key，则把当前桶该槽位对应的key和value删除，将该槽位的tophash置为emptyOne，如果发现当前槽位后面没有元素，则将tophash设置为emptyRest，并循环向前检查前一个元素，若前一个元素也为空，槽位状态为emptyOne，则将前一个元素的tophash也设置为emptyRest。这样做的目的是将emptyRest状态尽可能地向前面的槽推进，这样做是为了增加效率，因为在查找的时候发现了emptyRest状态就不用继续往后找了，因为后面没有元素了。</p><h2 id="map遍历"><a href="#map遍历" class="headerlink" title="map遍历"></a>map遍历</h2><h3 id="遍历过程"><a href="#遍历过程" class="headerlink" title="遍历过程"></a>遍历过程</h3><ol><li>map的并发写检测，判断map是否处于并发写状态，是则panic</li><li>判断是否已经遍历完了，遍历完了直接退出</li><li>开始遍历</li><li>首选确定一个随机开始遍历的起始桶下标作为startBucket，然后确定一个随机的槽位下标作为offset</li><li>根据startBucket和offset开始遍历当前桶和当前桶的溢出桶，如果当前桶正在扩容，则进行步骤6，否则进行步骤7</li><li>在遍历处于扩容状态的bucket的时候，因为当前bucket正在扩容，我们并不会遍历这个桶，而是会找到这个桶的旧桶old_bucket，遍历旧桶中的一部分key，这些key重新hash计算后能够散列到bucket中，对那些key经过重新hash计算不散列到bucket中的key，则跳过</li><li>根据遍历初始化的时候选定的随机槽位开始遍历桶内的各个key&#x2F;value</li><li>继续遍历bucket溢出指针指向的溢出链表中的溢出桶</li><li>假如遍历到了起始桶startBucket，则说明遍历完了，结束遍历</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>golang底层原理</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>移除元素</title>
+    <link href="/2024/07/10/%E7%A7%BB%E9%99%A4%E5%85%83%E7%B4%A0/"/>
+    <url>/2024/07/10/%E7%A7%BB%E9%99%A4%E5%85%83%E7%B4%A0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="移除元素"><a href="#移除元素" class="headerlink" title="移除元素"></a>移除元素</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>​        双指针，一个用于遍历，一个用于标识已经处理完毕的最后一个位置</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">removeElement</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>, val <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> &#123;<br>    <span class="hljs-comment">//交换</span><br>    <span class="hljs-comment">//遍历，双指针，一个用于指示已处理完毕的数组末尾，一个用于遍历</span><br>    n:=<span class="hljs-built_in">len</span>(nums)<br>    slow:=<span class="hljs-number">0</span><br>    fast:=<span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> fast&lt;n&#123;<span class="hljs-comment">//fast&gt;=n表示已经遍历完</span><br><br>        <span class="hljs-keyword">if</span> nums[fast]!=val&#123;<span class="hljs-comment">//将不是val的都换到前面</span><br>           swap(&amp;nums[slow],&amp;nums[fast])<br>           fast++ <span class="hljs-comment">//换完之后，slow,fast都后移</span><br>           slow++<br>        &#125;<span class="hljs-keyword">else</span>&#123;<span class="hljs-comment">//是val的话就跳过</span><br>            fast++<br>        &#125;<br><br>    &#125;<br>    <span class="hljs-keyword">return</span> slow<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">swap</span><span class="hljs-params">(a *<span class="hljs-type">int</span>,b *<span class="hljs-type">int</span>)</span></span>&#123;<br>    t:=*a<br>    *a=*b<br>    *b=t<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>二分查找</title>
+    <link href="/2024/07/10/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
+    <url>/2024/07/10/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/</url>
+    
+    <content type="html"><![CDATA[<h1 id="二分查找学习"><a href="#二分查找学习" class="headerlink" title="二分查找学习"></a>二分查找学习</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><pre><code class="hljs">mid代表数组中间的值下标，target&gt;num[mid],说明在mid右边,target&lt;num[mid],说明在mid左边,等于mid,返回mid</code></pre><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code class="hljs"><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">search</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>, target <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> &#123;<br>   <span class="hljs-comment">//二分查找</span><br><br>   <span class="hljs-comment">//mid代表数组中间的值下标，target&gt;num[mid],说明在mid右边,target&lt;num[mid],说明在mid左边,</span><br>   <span class="hljs-comment">//等于mid,返回mid</span><br>   l:=<span class="hljs-number">0</span><br>   r:=<span class="hljs-built_in">len</span>(nums)<span class="hljs-number">-1</span><br>   <span class="hljs-keyword">var</span> mid <span class="hljs-type">int</span><br>   <span class="hljs-keyword">for</span> l&lt;=r&#123;<span class="hljs-comment">//</span><br>      mid=(l+r)/<span class="hljs-number">2</span><br>      <span class="hljs-keyword">if</span> target&gt;nums[mid]&#123;<br>       l+=<span class="hljs-number">1</span><br>      &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> target&lt;nums[mid]&#123;<br>         r-=<span class="hljs-number">1</span><br>      &#125;<span class="hljs-keyword">else</span>&#123;<br>       <span class="hljs-keyword">return</span> mid<br>      &#125;<br>   &#125;<br>   <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span><br>  &#125;<br></code></pre></td></tr></table></figure></code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>物理机qt程序连接虚拟机服务器连不上</title>
     <link href="/2024/05/04/%E7%89%A9%E7%90%86%E6%9C%BAqt%E7%A8%8B%E5%BA%8F%E8%BF%9E%E6%8E%A5%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9E%E4%B8%8D%E4%B8%8A/"/>
     <url>/2024/05/04/%E7%89%A9%E7%90%86%E6%9C%BAqt%E7%A8%8B%E5%BA%8F%E8%BF%9E%E6%8E%A5%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9E%E4%B8%8D%E4%B8%8A/</url>
