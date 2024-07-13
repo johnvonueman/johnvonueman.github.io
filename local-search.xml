@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>channel底层原理赏析</title>
+    <link href="/2024/07/13/channel%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/"/>
+    <url>/2024/07/13/channel%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/</url>
+    
+    <content type="html"><![CDATA[<h1 id="channel底层原理赏析"><a href="#channel底层原理赏析" class="headerlink" title="channel底层原理赏析"></a>channel底层原理赏析</h1><h2 id="channel底层结构"><a href="#channel底层结构" class="headerlink" title="channel底层结构"></a>channel底层结构</h2><p><img src="https://ask.qcloudimg.com/http-save/yehe-6019987/bk5bw2rxaz.png"></p><p>简单说明：</p><ul><li><code>buf</code>是有缓冲的channel所特有的结构，用来存储缓存数据。是个循环链表</li><li><code>sendx</code>和<code>recvx</code>用于记录<code>buf</code>这个循环链表中的<del>发送或者接收的</del>index</li><li><code>lock</code>是个互斥锁。</li><li><code>recvq</code>和<code>sendq</code>分别是接收(&lt;-channel)或者发送(channel &lt;- xxx)的goroutine抽象出来的结构体(sudog)的队列。是个双向链表</li></ul><p>源码位于<code>/runtime/chan.go</code>中(目前版本：1.11)。结构体为<code>hchan</code>。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> hchan <span class="hljs-keyword">struct</span> &#123;<br>    qcount   <span class="hljs-type">uint</span>           <span class="hljs-comment">// total data in the queue</span><br>    dataqsiz <span class="hljs-type">uint</span>           <span class="hljs-comment">// size of the circular queue</span><br>    buf      unsafe.Pointer <span class="hljs-comment">// points to an array of dataqsiz elements</span><br>    elemsize <span class="hljs-type">uint16</span><br>    closed   <span class="hljs-type">uint32</span><br>    elemtype *_type <span class="hljs-comment">// element type</span><br>    sendx    <span class="hljs-type">uint</span>   <span class="hljs-comment">// send index</span><br>    recvx    <span class="hljs-type">uint</span>   <span class="hljs-comment">// receive index</span><br>    recvq    waitq  <span class="hljs-comment">// list of recv waiters</span><br>    sendq    waitq  <span class="hljs-comment">// list of send waiters</span><br><br>    <span class="hljs-comment">// lock protects all fields in hchan, as well as several</span><br>    <span class="hljs-comment">// fields in sudogs blocked on this channel.</span><br>    <span class="hljs-comment">//</span><br>    <span class="hljs-comment">// Do not change another G&#x27;s status while holding this lock</span><br>    <span class="hljs-comment">// (in particular, do not ready a G), as this can deadlock</span><br>    <span class="hljs-comment">// with stack shrinking.</span><br>    lock mutex<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="channel读操作"><a href="#channel读操作" class="headerlink" title="channel读操作"></a>channel读操作</h2><ol><li>有写进程在阻塞，读buf，再将写进程数据写入buf，唤醒写进程</li><li>没有写进程，buf不为空，读buf</li><li>没有写进程，buf为空,挂起</li><li>特别的<ul><li>channel&#x3D;&#x3D;nil,panic</li><li>channel&#x3D;&#x3D;closed,零值</li></ul></li></ol><h2 id="channel写操作"><a href="#channel写操作" class="headerlink" title="channel写操作"></a>channel写操作</h2><ol><li>有读进程在阻塞，直接将数据写到读进程的数据部分，唤醒读进程</li><li>没有读进程阻塞channel有缓冲空间，写入channel缓冲</li><li>没有读进程阻塞channel没有缓冲空间，挂起</li><li>特别的<ul><li>channel&#x3D;&#x3D;nil,panic</li><li>channel&#x3D;&#x3D;closed,panic</li></ul></li></ol><h2 id="channel关闭操作"><a href="#channel关闭操作" class="headerlink" title="channel关闭操作"></a>channel关闭操作</h2><p>  对已经关闭的channel，写，关闭，都是返回panic，读，返回零值</p><h2 id="select的阻塞与非阻塞"><a href="#select的阻塞与非阻塞" class="headerlink" title="select的阻塞与非阻塞"></a>select的阻塞与非阻塞</h2><p>  case是随机选取的，阻塞就是不能立即执行，非阻塞就是能立即执行</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>go底层原理鉴赏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>channel select</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>sync.map原理赏析</title>
     <link href="/2024/07/12/sync-map%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/"/>
     <url>/2024/07/12/sync-map%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/</url>
@@ -70,7 +95,7 @@
     
     <categories>
       
-      <category>golang底层原理</category>
+      <category>go底层原理鉴赏</category>
       
     </categories>
     

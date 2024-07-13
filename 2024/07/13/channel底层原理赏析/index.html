@@ -16,23 +16,26 @@
   <meta name="author" content="Zhupanpan">
   <meta name="keywords" content="">
   
-    <meta name="description" content="sync.map原理赏析sync.map底层结构​        主要是由两个map分工协作，一个是read map,一个是dirty map。其中read map负责将读，更新，删除操作的流量替dirty挡下来，dirty map为read map进行兜底。read map通过原子操作进行读，更新，删除，与锁相比更轻量化。 123456789101112type Map struct &amp;#123">
+    <meta name="description" content="channel底层原理赏析channel底层结构 简单说明：  buf是有缓冲的channel所特有的结构，用来存储缓存数据。是个循环链表 sendx和recvx用于记录buf这个循环链表中的发送或者接收的index lock是个互斥锁。 recvq和sendq分别是接收(&lt;-channel)或者发送(channel &lt;- xxx)的goroutine抽象出来的结构体(sudog)的队">
 <meta property="og:type" content="article">
-<meta property="og:title" content="sync.map原理赏析">
-<meta property="og:url" content="http://example.com/2024/07/12/sync-map%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/index.html">
+<meta property="og:title" content="channel底层原理赏析">
+<meta property="og:url" content="http://example.com/2024/07/13/channel%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/index.html">
 <meta property="og:site_name" content="我超爱编程">
-<meta property="og:description" content="sync.map原理赏析sync.map底层结构​        主要是由两个map分工协作，一个是read map,一个是dirty map。其中read map负责将读，更新，删除操作的流量替dirty挡下来，dirty map为read map进行兜底。read map通过原子操作进行读，更新，删除，与锁相比更轻量化。 123456789101112type Map struct &amp;#123">
+<meta property="og:description" content="channel底层原理赏析channel底层结构 简单说明：  buf是有缓冲的channel所特有的结构，用来存储缓存数据。是个循环链表 sendx和recvx用于记录buf这个循环链表中的发送或者接收的index lock是个互斥锁。 recvq和sendq分别是接收(&lt;-channel)或者发送(channel &lt;- xxx)的goroutine抽象出来的结构体(sudog)的队">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-07-12T04:20:11.000Z">
-<meta property="article:modified_time" content="2024-07-12T04:40:46.137Z">
+<meta property="og:image" content="https://ask.qcloudimg.com/http-save/yehe-6019987/bk5bw2rxaz.png">
+<meta property="article:published_time" content="2024-07-13T04:52:49.000Z">
+<meta property="article:modified_time" content="2024-07-13T05:17:52.353Z">
 <meta property="article:author" content="Zhupanpan">
+<meta property="article:tag" content="channel select">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ask.qcloudimg.com/http-save/yehe-6019987/bk5bw2rxaz.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>sync.map原理赏析 - 我超爱编程</title>
+  <title>channel底层原理赏析 - 我超爱编程</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -227,7 +230,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="sync.map原理赏析"></span>
+            <span id="subtitle" data-typed-text="channel底层原理赏析"></span>
           
         </div>
 
@@ -238,8 +241,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-07-12 12:20" pubdate>
-          2024年7月12日 中午
+        <time datetime="2024-07-13 12:52" pubdate>
+          2024年7月13日 下午
         </time>
       </span>
     
@@ -250,7 +253,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          337 字
+          342 字
         
       </span>
     
@@ -306,21 +309,44 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">sync.map原理赏析</h1>
+            <h1 id="seo-header">channel底层原理赏析</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="sync-map原理赏析"><a href="#sync-map原理赏析" class="headerlink" title="sync.map原理赏析"></a>sync.map原理赏析</h1><h2 id="sync-map底层结构"><a href="#sync-map底层结构" class="headerlink" title="sync.map底层结构"></a>sync.map底层结构</h2><p>​        主要是由两个map分工协作，一个是read map,一个是dirty map。其中read map负责将读，更新，删除操作的流量替dirty挡下来，dirty map为read map进行兜底。read map通过原子操作进行读，更新，删除，与锁相比更轻量化。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Map <span class="hljs-keyword">struct</span> &#123;<span class="hljs-comment">// 互斥锁，保证dirty map 和 misses的并发安全</span><br>    mu sync.Mutex<span class="hljs-comment">// 无锁化的read map（小林服务器）</span><br>    read atomic.Value <span class="hljs-comment">// readOnly// 读写需要加锁的map（诸葛青服务器）</span><br>    dirty <span class="hljs-keyword">map</span>[<span class="hljs-keyword">interface</span>&#123;&#125;]*entry<span class="hljs-comment">// 记录有多少次读、删请求 找了诸葛青</span><br>    misses <span class="hljs-type">int</span><br>&#125;<br><span class="hljs-keyword">type</span> readOnly <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-comment">// read map 存放 k-v的实体</span><br>    m <span class="hljs-keyword">map</span>[<span class="hljs-keyword">interface</span>&#123;&#125;]*entry<br>    <span class="hljs-comment">// 标识是否有 数据缺失，即dirty map里面有 read map中没有的key，就是amended为true</span><br>    amended <span class="hljs-type">bool</span><br>&#125;<br></code></pre></td></tr></table></figure>
+                <h1 id="channel底层原理赏析"><a href="#channel底层原理赏析" class="headerlink" title="channel底层原理赏析"></a>channel底层原理赏析</h1><h2 id="channel底层结构"><a href="#channel底层结构" class="headerlink" title="channel底层结构"></a>channel底层结构</h2><p><img src="https://ask.qcloudimg.com/http-save/yehe-6019987/bk5bw2rxaz.png" srcset="/img/loading.gif" lazyload></p>
+<p>简单说明：</p>
+<ul>
+<li><code>buf</code>是有缓冲的channel所特有的结构，用来存储缓存数据。是个循环链表</li>
+<li><code>sendx</code>和<code>recvx</code>用于记录<code>buf</code>这个循环链表中的<del>发送或者接收的</del>index</li>
+<li><code>lock</code>是个互斥锁。</li>
+<li><code>recvq</code>和<code>sendq</code>分别是接收(&lt;-channel)或者发送(channel &lt;- xxx)的goroutine抽象出来的结构体(sudog)的队列。是个双向链表</li>
+</ul>
+<p>源码位于<code>/runtime/chan.go</code>中(目前版本：1.11)。结构体为<code>hchan</code>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> hchan <span class="hljs-keyword">struct</span> &#123;<br>    qcount   <span class="hljs-type">uint</span>           <span class="hljs-comment">// total data in the queue</span><br>    dataqsiz <span class="hljs-type">uint</span>           <span class="hljs-comment">// size of the circular queue</span><br>    buf      unsafe.Pointer <span class="hljs-comment">// points to an array of dataqsiz elements</span><br>    elemsize <span class="hljs-type">uint16</span><br>    closed   <span class="hljs-type">uint32</span><br>    elemtype *_type <span class="hljs-comment">// element type</span><br>    sendx    <span class="hljs-type">uint</span>   <span class="hljs-comment">// send index</span><br>    recvx    <span class="hljs-type">uint</span>   <span class="hljs-comment">// receive index</span><br>    recvq    waitq  <span class="hljs-comment">// list of recv waiters</span><br>    sendq    waitq  <span class="hljs-comment">// list of send waiters</span><br><br>    <span class="hljs-comment">// lock protects all fields in hchan, as well as several</span><br>    <span class="hljs-comment">// fields in sudogs blocked on this channel.</span><br>    <span class="hljs-comment">//</span><br>    <span class="hljs-comment">// Do not change another G&#x27;s status while holding this lock</span><br>    <span class="hljs-comment">// (in particular, do not ready a G), as this can deadlock</span><br>    <span class="hljs-comment">// with stack shrinking.</span><br>    lock mutex<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h2 id="双向数据流转操作"><a href="#双向数据流转操作" class="headerlink" title="双向数据流转操作"></a>双向数据流转操作</h2><p>​       主要负责数据同步吧，当访问read map的miss超过一定数量时，就会将dirty map的值赋给read map,然后将dirty map置空，当访问dirty map时如果dirty map为空，将read map拷贝一份给dirty map。</p>
-<h2 id="为什么要有nil和expunged状态"><a href="#为什么要有nil和expunged状态" class="headerlink" title="为什么要有nil和expunged状态"></a>为什么要有nil和expunged状态</h2><p>nil:删除数据时，通过read map就可以软删除，减少锁的使用</p>
-<p>expunged：标记键值对是否存在于dirty map</p>
-<h2 id="sync-Map适用场景"><a href="#sync-Map适用场景" class="headerlink" title="sync.Map适用场景"></a>sync.Map适用场景</h2><p>读多，更新多，删除多，写少</p>
-<h2 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h2><p>不适合写操作多的场景</p>
-<p>数据流传的时候，将read map复制到dirty map时间复杂度O(n),比较耗时</p>
-<p>可以使用分段锁替代</p>
+<h2 id="channel读操作"><a href="#channel读操作" class="headerlink" title="channel读操作"></a>channel读操作</h2><ol>
+<li>有写进程在阻塞，读buf，再将写进程数据写入buf，唤醒写进程</li>
+<li>没有写进程，buf不为空，读buf</li>
+<li>没有写进程，buf为空,挂起</li>
+<li>特别的<ul>
+<li>channel&#x3D;&#x3D;nil,panic</li>
+<li>channel&#x3D;&#x3D;closed,零值</li>
+</ul>
+</li>
+</ol>
+<h2 id="channel写操作"><a href="#channel写操作" class="headerlink" title="channel写操作"></a>channel写操作</h2><ol>
+<li>有读进程在阻塞，直接将数据写到读进程的数据部分，唤醒读进程</li>
+<li>没有读进程阻塞channel有缓冲空间，写入channel缓冲</li>
+<li>没有读进程阻塞channel没有缓冲空间，挂起</li>
+<li>特别的<ul>
+<li>channel&#x3D;&#x3D;nil,panic</li>
+<li>channel&#x3D;&#x3D;closed,panic</li>
+</ul>
+</li>
+</ol>
+<h2 id="channel关闭操作"><a href="#channel关闭操作" class="headerlink" title="channel关闭操作"></a>channel关闭操作</h2><p>  对已经关闭的channel，写，关闭，都是返回panic，读，返回零值</p>
+<h2 id="select的阻塞与非阻塞"><a href="#select的阻塞与非阻塞" class="headerlink" title="select的阻塞与非阻塞"></a>select的阻塞与非阻塞</h2><p>  case是随机选取的，阻塞就是不能立即执行，非阻塞就是能立即执行</p>
 
                 
               </div>
@@ -351,6 +377,13 @@
     </div>
   
   
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/channel-select/" class="print-no-link">#channel select</a>
+      
+    </div>
+  
 </div>
 
 
@@ -359,8 +392,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>sync.map原理赏析</div>
-      <div>http://example.com/2024/07/12/sync-map原理赏析/</div>
+      <div>channel底层原理赏析</div>
+      <div>http://example.com/2024/07/13/channel底层原理赏析/</div>
     </div>
     <div class="license-meta">
       
@@ -372,7 +405,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年7月12日</div>
+          <div>2024年7月13日</div>
         </div>
       
       
@@ -404,18 +437,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/13/channel%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/" title="channel底层原理赏析">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">channel底层原理赏析</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/07/11/%E9%95%BF%E5%BA%A6%E6%9C%80%E5%B0%8F%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84/" title="长度最小的子数组">
-                        <span class="hidden-mobile">长度最小的子数组</span>
+                      <a href="/2024/07/12/sync-map%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/" title="sync.map原理赏析">
+                        <span class="hidden-mobile">sync.map原理赏析</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
