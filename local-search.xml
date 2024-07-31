@@ -4,11 +4,849 @@
   
   
   <entry>
+    <title>hash学习</title>
+    <link href="/2024/07/31/hash%E5%AD%A6%E4%B9%A0/"/>
+    <url>/2024/07/31/hash%E5%AD%A6%E4%B9%A0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="hash学习"><a href="#hash学习" class="headerlink" title="hash学习"></a>hash学习</h1><h2 id="hash的编码方式"><a href="#hash的编码方式" class="headerlink" title="hash的编码方式"></a>hash的编码方式</h2><ol><li>ziplist,在键值的长度较小，键值对数量较少时使用</li><li>其他情况使用hashTable</li></ol><h2 id="查找某个key的平均时间复杂度"><a href="#查找某个key的平均时间复杂度" class="headerlink" title="查找某个key的平均时间复杂度"></a>查找某个key的平均时间复杂度</h2><p>底层结构是ziplist时，O(n),hashTable O(1)</p><h2 id="查找元素总数时间复杂度"><a href="#查找元素总数时间复杂度" class="headerlink" title="查找元素总数时间复杂度"></a>查找元素总数时间复杂度</h2><p>O(1),used记录的</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>set学习</title>
+    <link href="/2024/07/31/set%E5%AD%A6%E4%B9%A0/"/>
+    <url>/2024/07/31/set%E5%AD%A6%E4%B9%A0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="set学习"><a href="#set学习" class="headerlink" title="set学习"></a>set学习</h1><h2 id="set的编码方式"><a href="#set的编码方式" class="headerlink" title="set的编码方式"></a>set的编码方式</h2><p>et的底层编码方式是IntSet和HashTable，当元素都是整数，且数量少于512时，使用第二章，否则使用第一种</p><h2 id="set是有序的吗"><a href="#set是有序的吗" class="headerlink" title="set是有序的吗"></a>set是有序的吗</h2><p>set的底层编码方式是IntSet和HashTable，第一种是有序的，第二种是无序的，不过一般不要依赖Set的顺序，业务中始终把Set当初无序的</p><h2 id="set为什么要用两种编码方式"><a href="#set为什么要用两种编码方式" class="headerlink" title="set为什么要用两种编码方式"></a>set为什么要用两种编码方式</h2><p>数据元素少时，节省内存，多时，使用hashTable加快查询效率</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>list理解</title>
+    <link href="/2024/07/31/list%E7%90%86%E8%A7%A3/"/>
+    <url>/2024/07/31/list%E7%90%86%E8%A7%A3/</url>
+    
+    <content type="html"><![CDATA[<h1 id="list理解"><a href="#list理解" class="headerlink" title="list理解"></a>list理解</h1><h2 id="list是完全先入先出的吗"><a href="#list是完全先入先出的吗" class="headerlink" title="list是完全先入先出的吗"></a>list是完全先入先出的吗</h2><p>不是，list是一个双端操作对象，不仅可以先入先出，还可以后入先出</p><h2 id="list对象底层编码方式"><a href="#list对象底层编码方式" class="headerlink" title="list对象底层编码方式"></a>list对象底层编码方式</h2><p>跟redis版本有关</p><p>3.2之前使用ziplist+linkedlist,当单个数据长度较小，数据个数少，使用ziplist，否则使用linkedlist</p><p>3.2之后使用quicklist，这是一种结合了ziplist和linkedlist的数据结构，它是一个双端链表，存储的数据是ziplist</p><h2 id="ziplist是怎么压缩数据的"><a href="#ziplist是怎么压缩数据的" class="headerlink" title="ziplist是怎么压缩数据的"></a>ziplist是怎么压缩数据的</h2><p>首先，ziplist是连续分配的一块内存，它里面的数据通过双端链表组织在一起，而且这些数据是紧挨在一起的。</p><p>然后和普通的双端链表相比，连续分配减少了内存碎片，ziplist这种数据结构节省了指针所占用的空间</p><h2 id="ziplist可以从后往前遍历吗"><a href="#ziplist可以从后往前遍历吗" class="headerlink" title="ziplist可以从后往前遍历吗"></a>ziplist可以从后往前遍历吗</h2><p>可以，ziplist的结点中记录了上一个结点的长度，当前结点的地址减去上一个结点的长度，就可以得到上一个结点的地址</p><h2 id="ziplist查询结点个数的时间复杂度"><a href="#ziplist查询结点个数的时间复杂度" class="headerlink" title="ziplist查询结点个数的时间复杂度"></a>ziplist查询结点个数的时间复杂度</h2><p>一般是o(1),因为ziplist的header定义了记录结点数量的字段，但是这个字段的大小是2字节，当结点个数超过65535时，就要遍历整个ziplist</p><h2 id="linkedlist查询结点个数"><a href="#linkedlist查询结点个数" class="headerlink" title="linkedlist查询结点个数"></a>linkedlist查询结点个数</h2><p>O(1)</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>反转字符串II</title>
+    <link href="/2024/07/30/%E5%8F%8D%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2II/"/>
+    <url>/2024/07/30/%E5%8F%8D%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2II/</url>
+    
+    <content type="html"><![CDATA[<h1 id="反转字符串II"><a href="#反转字符串II" class="headerlink" title="反转字符串II"></a>反转字符串II</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>思路就是模拟就可以了，但是go语言种string不可改变，要先转为切片[]byte,然后切片再转回字符串</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reverseStr</span><span class="hljs-params">(s <span class="hljs-type">string</span>, k <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">string</span> &#123;<br>    str:=[]<span class="hljs-type">byte</span>(s)<br>    last:=<span class="hljs-built_in">len</span>(str)<br>    begin:=<span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> last&gt;=<span class="hljs-number">2</span>*k&#123;<br>         reverse(str,begin,begin+k<span class="hljs-number">-1</span>)<br>         begin+=<span class="hljs-number">2</span>*k<br>         last-=<span class="hljs-number">2</span>*k<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> last&lt;k&#123;<br>        reverse(str,begin,begin+last<span class="hljs-number">-1</span>)<br>            &#125;<br>    <span class="hljs-keyword">if</span> last&gt;=k&amp;&amp;last&lt;<span class="hljs-number">2</span>*k&#123;<br>        reverse(str,begin,begin+k<span class="hljs-number">-1</span>)<br>    &#125;<br>    <br>    <span class="hljs-keyword">return</span> <span class="hljs-type">string</span>(str)<br><br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reverse</span><span class="hljs-params">(s []<span class="hljs-type">byte</span>,begin <span class="hljs-type">int</span>,end <span class="hljs-type">int</span>)</span></span>&#123;<br>    Begin,End:=begin,end<br>    <span class="hljs-keyword">for</span> Begin&lt;End&#123;<br>         s[Begin],s[End]=s[End],s[Begin]<br>         Begin++<br>         End--<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>字符串</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>分布式锁</title>
+    <link href="/2024/07/30/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/"/>
+    <url>/2024/07/30/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</url>
+    
+    <content type="html"><![CDATA[<h1 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h1><h2 id="分布式锁实现要点"><a href="#分布式锁实现要点" class="headerlink" title="分布式锁实现要点"></a>分布式锁实现要点</h2><p>加锁：在加锁时要加上拥有者和过期时间，拥有者是为了在解锁时只释放自己的锁，过期时间是为了防止加锁后出现故障没法解锁进行兜底</p><p>解锁：要先判断owner，是自己的才解锁，同时要保证这两步的原子性，可以使用lua脚本来保证</p><h2 id="为什么要引入owner"><a href="#为什么要引入owner" class="headerlink" title="为什么要引入owner"></a>为什么要引入owner</h2><p>要保证锁的对称性，也就是只能释放自己的锁，不能释放别人的锁，举个例子，有两个进程A，B，A获取锁后，由于某些原因暂停执行，然后锁过期，这时候，b获取锁，然后A恢复了，又释放了锁，此时它释放的是B的锁</p><h2 id="分布式锁完全可靠吗"><a href="#分布式锁完全可靠吗" class="headerlink" title="分布式锁完全可靠吗"></a>分布式锁完全可靠吗</h2><p>没有完全可靠的分布式锁，在使用分布式锁的时候就要考虑到，不过可以使用RedLock集群化的分布式锁，这种模式出问题的概率就很小了。</p><h2 id="什么是RedLock"><a href="#什么是RedLock" class="headerlink" title="什么是RedLock"></a>什么是RedLock</h2><p>一般就是多个机器，达到一半以上同意加锁才算加锁成功</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis学习</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>缓存一致性问题</title>
+    <link href="/2024/07/30/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/"/>
+    <url>/2024/07/30/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</url>
+    
+    <content type="html"><![CDATA[<h1 id="缓存一致性问题"><a href="#缓存一致性问题" class="headerlink" title="缓存一致性问题"></a>缓存一致性问题</h1><h2 id="什么是缓存一致性问题"><a href="#什么是缓存一致性问题" class="headerlink" title="什么是缓存一致性问题"></a>什么是缓存一致性问题</h2><p>更新数据库时，缓存如何和数据库的数据保持一致的问题</p><h2 id="应用旁路缓存，你是怎么处理缓存一致性问题的"><a href="#应用旁路缓存，你是怎么处理缓存一致性问题的" class="headerlink" title="应用旁路缓存，你是怎么处理缓存一致性问题的"></a>应用旁路缓存，你是怎么处理缓存一致性问题的</h2><p>用过期时间兜底，更新数据库数据时删除缓存数据来保持缓存一致，我也尝试过使用binlog，但是还要引入消费队列，收益不太明显，就还是使用第一种方式了</p><h2 id="binlog用在什么场景"><a href="#binlog用在什么场景" class="headerlink" title="binlog用在什么场景"></a>binlog用在什么场景</h2><p>过期时间长或者不过期的key，例如某网站上的展示视频。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>缓存异常场景</title>
+    <link href="/2024/07/30/%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8%E5%9C%BA%E6%99%AF/"/>
+    <url>/2024/07/30/%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8%E5%9C%BA%E6%99%AF/</url>
+    
+    <content type="html"><![CDATA[<h1 id="缓存异常场景"><a href="#缓存异常场景" class="headerlink" title="缓存异常场景"></a>缓存异常场景</h1><h2 id="缓存击穿和缓存穿透的区别"><a href="#缓存击穿和缓存穿透的区别" class="headerlink" title="缓存击穿和缓存穿透的区别"></a>缓存击穿和缓存穿透的区别</h2><p>缓存击穿是缓存里没有数据而数据库有数据,查找某个key时被一瞬间的流量击垮</p><p>缓存穿透是缓存和数据库都没有数据，被海量数据击垮</p><p>核心区别是一个数据是有的，不过还没来得及在缓存中生成，一个是就没有这个数据</p><h2 id="缓存雪崩和缓存击穿的区别"><a href="#缓存雪崩和缓存击穿的区别" class="headerlink" title="缓存雪崩和缓存击穿的区别"></a>缓存雪崩和缓存击穿的区别</h2><p>它们都是由key过期导致的，不同的是缓存雪崩是海量key同时过期，它们一起访问击垮数据库，缓存击穿是某个key过期，刚好对这个key有大规模访问</p><h2 id="缓存击穿怎么解决"><a href="#缓存击穿怎么解决" class="headerlink" title="缓存击穿怎么解决"></a>缓存击穿怎么解决</h2><ol><li>支持热键续期</li><li>给数据库加锁，互斥访问</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>缓存基础知识</title>
+    <link href="/2024/07/30/%E7%BC%93%E5%AD%98%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    <url>/2024/07/30/%E7%BC%93%E5%AD%98%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/</url>
+    
+    <content type="html"><![CDATA[<h1 id="缓存基础知识"><a href="#缓存基础知识" class="headerlink" title="缓存基础知识"></a>缓存基础知识</h1><h2 id="怎么应用缓存"><a href="#怎么应用缓存" class="headerlink" title="怎么应用缓存"></a>怎么应用缓存</h2><p>一般都使用旁路缓存，访问数据时先访问缓存的数据，缓存里没有数据再去数据库查找</p><h2 id="旁路缓存的查询流程"><a href="#旁路缓存的查询流程" class="headerlink" title="旁路缓存的查询流程"></a>旁路缓存的查询流程</h2><p>请求先去访问redis,如果redis里没有数据，就去mysql里去查找，找到了就存到缓存里，然后返回找到的数据</p><h2 id="设置缓存的常用命令"><a href="#设置缓存的常用命令" class="headerlink" title="设置缓存的常用命令"></a>设置缓存的常用命令</h2><p>set key value</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>三数之和</title>
+    <link href="/2024/07/26/%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/"/>
+    <url>/2024/07/26/%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</url>
+    
+    <content type="html"><![CDATA[<h1 id="三数之和"><a href="#三数之和" class="headerlink" title="三数之和"></a>三数之和</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>之前做过，很快就想到是排序+双指针，但是题目要求不能重复，在去重这一步卡了，在去重第一个数a时，考虑它和它前一个数是不是相同，如果相同，跳过。在去除第二个数b,第三个数c时，考虑a+b+c&#x3D;&#x3D;0时的情况，这时候才去重，如果b和它前面相同，去重，如果c和它后边相同，去重。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">threeSum</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> [][]<span class="hljs-type">int</span> &#123;<br><span class="hljs-comment">//可以o(n^2),先对数组进行排序</span><br>  n:=<span class="hljs-built_in">len</span>(nums)<br>  sort.Ints(nums)<br>  ans:=<span class="hljs-built_in">make</span>([][]<span class="hljs-type">int</span>,<span class="hljs-number">0</span>)<br><span class="hljs-comment">//第一个指针向前遍历，第二个向前，第三个向后</span><br><span class="hljs-keyword">for</span> first:=<span class="hljs-number">0</span>;first&lt;n;first++&#123;<br>   <span class="hljs-keyword">if</span> first&gt;<span class="hljs-number">0</span>&amp;&amp;nums[first]==nums[first<span class="hljs-number">-1</span>]&#123;<span class="hljs-comment">//去重</span><br>    <span class="hljs-keyword">continue</span><br>   &#125;<br>   n1:=nums[first]<br>   second:=first+<span class="hljs-number">1</span><br>   third:=n<span class="hljs-number">-1</span><br>   <span class="hljs-comment">//两边向内移动</span><br>   <span class="hljs-keyword">for</span> second&lt;third&#123;<br>      n2:=nums[second]<br>      n3:=nums[third]<br>      <span class="hljs-keyword">if</span> n1+n2+n3==<span class="hljs-number">0</span>&#123;<span class="hljs-comment">//去重</span><br>        ans=<span class="hljs-built_in">append</span>(ans,[]<span class="hljs-type">int</span>&#123;n1,n2,n3&#125;)<br>        <span class="hljs-keyword">for</span> second&lt;third&amp;&amp;nums[second]==n2&#123;<br>             second++<br>        &#125;<br>        <span class="hljs-keyword">for</span> second&lt;third&amp;&amp;nums[third]==n3&#123;<br>            third--<br>        &#125;<br>      &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> n1+n2+n3&lt;<span class="hljs-number">0</span>&#123;<br>        second++<br>      &#125;<span class="hljs-keyword">else</span>&#123;<br>        third--<br>      &#125;<br>   &#125;<br>&#125;<br><span class="hljs-keyword">return</span> ans<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>双指针</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>AOF优化</title>
+    <link href="/2024/07/26/AOF%E4%BC%98%E5%8C%96/"/>
+    <url>/2024/07/26/AOF%E4%BC%98%E5%8C%96/</url>
+    
+    <content type="html"><![CDATA[<h1 id="AOF优化"><a href="#AOF优化" class="headerlink" title="AOF优化"></a>AOF优化</h1><h2 id="什么是混合持久化"><a href="#什么是混合持久化" class="headerlink" title="什么是混合持久化"></a>什么是混合持久化</h2><p>在AOF重写时，子进程以将此时的数据以rdb形式写入新的AOF文件，如果此时有新的写入命令，就将新写入的数据追加到新的AOF文件，此时的AOF文件就是RDB和AOF组成的日志文件。</p><h2 id="为什么需要混合持久化"><a href="#为什么需要混合持久化" class="headerlink" title="为什么需要混合持久化"></a>为什么需要混合持久化</h2><p>混合持久化实际上是AOF持久化的优化，子进程将内存中的数据以rdb形式加入新的AOF文件中，如果有新的命令写入，则以普通AOF的形式写入到新的AOF文件中。这样做好处就是既有rdb文件小，加载快的优点，又有AOF持久化数据丢失少的优点。</p><h2 id="启动加载AOF文件时，这么判断它是不是混合持久化"><a href="#启动加载AOF文件时，这么判断它是不是混合持久化" class="headerlink" title="启动加载AOF文件时，这么判断它是不是混合持久化"></a>启动加载AOF文件时，这么判断它是不是混合持久化</h2><p>根据文件名，混合持久化的AOF文件有REDIS标识</p><h2 id="AOF重写有什么不足之处"><a href="#AOF重写有什么不足之处" class="headerlink" title="AOF重写有什么不足之处"></a>AOF重写有什么不足之处</h2><p>不足之处就是有一些额外的开销，比如重复写入缓冲区，将增量数据写入管道。redis7.0也做了一些改进，叫做MP-AOF，核心思路就是不再是单个AOF文件，而是由manifest管理的一组AOF文件，这组AOF文件包含一个base文件和一些增量文件，这样就不需要额外的缓冲区了。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>AOF详解</title>
+    <link href="/2024/07/26/AOF%E8%AF%A6%E8%A7%A3/"/>
+    <url>/2024/07/26/AOF%E8%AF%A6%E8%A7%A3/</url>
+    
+    <content type="html"><![CDATA[<h1 id="AOF详解"><a href="#AOF详解" class="headerlink" title="AOF详解"></a>AOF详解</h1><h2 id="AOF是默认开启的吗"><a href="#AOF是默认开启的吗" class="headerlink" title="AOF是默认开启的吗"></a>AOF是默认开启的吗</h2><p>AOF不是默认开启的，需要手动开启，RDB是默认开启的</p><h2 id="AOF重写有什么作用"><a href="#AOF重写有什么作用" class="headerlink" title="AOF重写有什么作用"></a>AOF重写有什么作用</h2><p>首先AOF重写是为了解决一个问题，就是随着命令的写入，一些在AOF文件里的命令是冗余的，比如set a 1,set a      </p><p>2,这里第一条命令就是冗余的。AOF重写能够根据当前数据的状态，从新写AOF文件</p><h2 id="AOF重写流程"><a href="#AOF重写流程" class="headerlink" title="AOF重写流程"></a>AOF重写流程</h2><p>主进程fork一个子进程，子进程根据当前数据状态进行AOF文件重写，如果此时有命令写入，那么主进程将其写入缓存，然后这个缓存里的内容通过管道传递给子进程，子进程将其写入aof文件</p><h2 id="AOF对主进程的影响"><a href="#AOF对主进程的影响" class="headerlink" title="AOF对主进程的影响"></a>AOF对主进程的影响</h2><ol><li>当刷盘策略使用aways时，如果AOF写入日志压力过大，会导致主进程阻塞</li><li>使用everysec，如果后台线程上一轮的fsync没有完成，会导致本轮主线程执行write被阻塞</li><li>执行AOF重写时，如果数据量过大，会导致fork子进程这个操作耗时，从而阻塞子进程</li></ol><h2 id="AOF缓冲区和AOF重写缓冲区"><a href="#AOF缓冲区和AOF重写缓冲区" class="headerlink" title="AOF缓冲区和AOF重写缓冲区"></a>AOF缓冲区和AOF重写缓冲区</h2><p>重写时，有新的写入执行命令，主线程会将数据写入到AOF缓冲区和AOF重写缓冲区</p><ol><li>AOF缓冲区一直都是存在的，为了防止主线程写入命令时，突然宕机，原来的AOF日志也是完整的</li><li>AOF重写缓冲区是为了保证新的AOF文件包含了最新写入的命令</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>RDB详解</title>
+    <link href="/2024/07/26/RDB%E8%AF%A6%E8%A7%A3/"/>
+    <url>/2024/07/26/RDB%E8%AF%A6%E8%A7%A3/</url>
+    
+    <content type="html"><![CDATA[<h1 id="RDB详解"><a href="#RDB详解" class="headerlink" title="RDB详解"></a>RDB详解</h1><h2 id="RDB本质"><a href="#RDB本质" class="headerlink" title="RDB本质"></a>RDB本质</h2><p>RDB本质就是二进制形式的rdb文件</p><h2 id="RDB执行流程"><a href="#RDB执行流程" class="headerlink" title="RDB执行流程"></a>RDB执行流程</h2><ol><li>主进程fork出一个子进程用于执行RDB操作</li><li>子进程将快照存入临时rdb文件</li><li>用该临时rdb文件替换旧的rdb文件</li></ol><h2 id="RDB如何开启呢"><a href="#RDB如何开启呢" class="headerlink" title="RDB如何开启呢"></a>RDB如何开启呢</h2><ol><li>配置定时触发，触发时使用的时后台持久化方式</li><li>手动触发。使用save命令，底层调用的时阻塞时持久化方式，使用bgsave，底层调用时使用的是后台持久化方式</li><li>如果redis正常关闭，那么会执行阻塞式持久化</li></ol><h2 id="RDB对主流程有什么影响"><a href="#RDB对主流程有什么影响" class="headerlink" title="RDB对主流程有什么影响"></a>RDB对主流程有什么影响</h2><ol><li><p>当执行阻塞式持久化时，由主进程进行快照保存，会阻塞主进程</p></li><li><p>当执行后台持久化时</p><blockquote><ul><li>由于fork的过程是同步的，当数据量比较大时，会阻塞主进程</li><li>由于采用了写时复制技术，在进行RDB快照保存时，有大量的写入操作执行，会导致主进程多拷贝一份数据，消耗大量额外内存</li></ul></blockquote></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>redis持久化</title>
+    <link href="/2024/07/25/redis%E6%8C%81%E4%B9%85%E5%8C%96/"/>
+    <url>/2024/07/25/redis%E6%8C%81%E4%B9%85%E5%8C%96/</url>
+    
+    <content type="html"><![CDATA[<h1 id="redis持久化"><a href="#redis持久化" class="headerlink" title="redis持久化"></a>redis持久化</h1><h2 id="为什么redis需要持久化"><a href="#为什么redis需要持久化" class="headerlink" title="为什么redis需要持久化"></a>为什么redis需要持久化</h2><p>持久化就是将内存的数据放入磁盘长期存储起来，redis的主要应用场景是缓存，但即使是缓存，我们也希望它重启之后依然存在，而不是请求一下打到存储，另外redis本身也可以用作存储，这时候就更需要持久化了</p><h2 id="持久化算法"><a href="#持久化算法" class="headerlink" title="持久化算法"></a>持久化算法</h2><p>RDB和AOF</p><h2 id="RDB和AOF的本质区别"><a href="#RDB和AOF的本质区别" class="headerlink" title="RDB和AOF的本质区别"></a>RDB和AOF的本质区别</h2><p>一个是基于快照存储的二进制文件，一个是操作的日志文件</p><h2 id="非要选一个，RDB和AOF选哪个"><a href="#非要选一个，RDB和AOF选哪个" class="headerlink" title="非要选一个，RDB和AOF选哪个"></a>非要选一个，RDB和AOF选哪个</h2><p>根据需求，如果追求性能，选RDB，如果追求数据完整性，选AOF</p><h2 id="RDB和AOF都开启了，系统会用哪个"><a href="#RDB和AOF都开启了，系统会用哪个" class="headerlink" title="RDB和AOF都开启了，系统会用哪个"></a>RDB和AOF都开启了，系统会用哪个</h2><p>用AOF，即使AOF文件没有打开，也不会用RDB，因为系统默认你选择AOF是想要保持数据完整性的，不会给你降级到RDB，RDB相对AOF数据更不安全</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>redis里的内存淘汰问题</title>
+    <link href="/2024/07/25/redis%E9%87%8C%E7%9A%84%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E9%97%AE%E9%A2%98/"/>
+    <url>/2024/07/25/redis%E9%87%8C%E7%9A%84%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E9%97%AE%E9%A2%98/</url>
+    
+    <content type="html"><![CDATA[<h1 id="redis里的内存淘汰问题"><a href="#redis里的内存淘汰问题" class="headerlink" title="redis里的内存淘汰问题"></a>redis里的内存淘汰问题</h1><h2 id="什么是内存淘汰"><a href="#什么是内存淘汰" class="headerlink" title="什么是内存淘汰"></a>什么是内存淘汰</h2><p>​     内存满了，需要淘汰一些对象所占用的内存</p><h2 id="redis里内存淘汰算法有哪些"><a href="#redis里内存淘汰算法有哪些" class="headerlink" title="redis里内存淘汰算法有哪些"></a>redis里内存淘汰算法有哪些</h2><p>主要有8种</p><ol><li>未开启淘汰机制。内存满了不会淘汰</li><li>开启淘汰机制，根据淘汰时间，和不根据淘汰时间的都有LRU，LFU，RANDOM三种，根据淘汰时间的还有ttl算法</li></ol><h2 id="redis里的LRU算法"><a href="#redis里的LRU算法" class="headerlink" title="redis里的LRU算法"></a>redis里的LRU算法</h2><p>不是标准的LRU算法，标准的LRU算法需要用到双链表来对对象进行管理，占用内存过多，所以redis使用近似的LRU算法。</p><p>近似的LRU算法：早期是随机选取几个对象（一般是5个），将活性最低的给淘汰掉</p><p>redis3.0之后引入候选池，先是随机选几个对象存入候选池，淘汰候选池种活性最低的，之后每次随机选取的对象只有活性小于候选池最低的才能加入候选池，候选池满了还要加元素，那就把候选池里活性最高的移出候选池</p><h2 id="redis里的LFU算法"><a href="#redis里的LFU算法" class="headerlink" title="redis里的LFU算法"></a>redis里的LFU算法</h2><p>根据频率来淘汰，其中频率又受最近访问时间的影响</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>redis单线程</title>
+    <link href="/2024/07/25/redis%E5%8D%95%E7%BA%BF%E7%A8%8B/"/>
+    <url>/2024/07/25/redis%E5%8D%95%E7%BA%BF%E7%A8%8B/</url>
+    
+    <content type="html"><![CDATA[<h1 id="redis单线程"><a href="#redis单线程" class="headerlink" title="redis单线程"></a>redis单线程</h1><h2 id="redis是单线程的吗"><a href="#redis是单线程的吗" class="headerlink" title="redis是单线程的吗"></a>redis是单线程的吗</h2><p>核心操作是单线程</p><p>也有多线程的，比如一些同步操作，unlink等</p><h2 id="redis为什么是单线程的"><a href="#redis为什么是单线程的" class="headerlink" title="redis为什么是单线程的"></a>redis为什么是单线程的</h2><p>redis的性能瓶颈是IO操作，不是cpu,使用多线程也会有如下开销</p><ol><li>线程切换</li><li>线程本身大小也占据内存</li><li>同步机制也有开销，如互斥锁</li></ol><h2 id="为什么单线程性能也这么高"><a href="#为什么单线程性能也这么高" class="headerlink" title="为什么单线程性能也这么高"></a>为什么单线程性能也这么高</h2><ol><li>在内存里操作，本来就快</li><li>redis的数据结构牛逼</li><li>redis实现了IO多路复用</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>redis内存存储结构</title>
+    <link href="/2024/07/25/redis%E5%86%85%E5%AD%98%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/"/>
+    <url>/2024/07/25/redis%E5%86%85%E5%AD%98%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/</url>
+    
+    <content type="html"><![CDATA[<h1 id="redis内存存储结构"><a href="#redis内存存储结构" class="headerlink" title="redis内存存储结构"></a>redis内存存储结构</h1><h2 id="redis结构体"><a href="#redis结构体" class="headerlink" title="redis结构体"></a>redis结构体</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">redisDb</span> &#123;</span><br>    dict *dict;                 <span class="hljs-comment">/* The keyspace for this DB */</span><br>    dict *expires;              <span class="hljs-comment">/* Timeout of keys with a timeout set*/</span><br>    dict *blocking_keys;        <span class="hljs-comment">/* Keys with clients waiting for data*/</span><br>    dict *ready_keys;           <span class="hljs-comment">/* Blocked keys that received a PUSH */</span><br>    dict *watched_keys;         <span class="hljs-comment">/* WATCHED keys for MULTI/EXEC CAS */</span><br>    <span class="hljs-type">int</span> id;                     <span class="hljs-comment">/* Database ID */</span><br>    <span class="hljs-type">long</span> <span class="hljs-type">long</span> avg_ttl;          <span class="hljs-comment">/* Average TTL, just for stats */</span><br>    <span class="hljs-built_in">list</span> *defrag_later;         <span class="hljs-comment">/* List of key names to attempt to defrag one by one, gradually. */</span><br>&#125; redisDb;<br></code></pre></td></tr></table></figure><h2 id="dict和expires"><a href="#dict和expires" class="headerlink" title="dict和expires"></a>dict和expires</h2><p>dict和expires都是字典结构</p><p>dict用于存数据部分，key是string类型的对象名，value是对象的结构</p><p>expires用于存过期时间，key是string类型的对象名，value是对象的超时时间</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>redis学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>四数之和II</title>
+    <link href="/2024/07/24/%E5%9B%9B%E6%A0%91%E4%B9%8B%E5%92%8CII/"/>
+    <url>/2024/07/24/%E5%9B%9B%E6%A0%91%E4%B9%8B%E5%92%8CII/</url>
+    
+    <content type="html"><![CDATA[<h1 id="四数之和II"><a href="#四数之和II" class="headerlink" title="四数之和II"></a>四数之和II</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>将四个数组分组，A,B为一组，C,D为一组，将第一组所有和的情况以及出现的次数放入map里，然后遍历第二组所有和的情况</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fourSumCount</span><span class="hljs-params">(nums1 []<span class="hljs-type">int</span>, nums2 []<span class="hljs-type">int</span>, nums3 []<span class="hljs-type">int</span>, nums4 []<span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> &#123;<br>    <span class="hljs-comment">//前两个分成一组，后两个分成一组</span><br>    <span class="hljs-comment">//第一组的所有情况放入hash表中，值，对应的次数</span><br>    <span class="hljs-comment">//列举第二组所有情况</span><br><br>    m:=<span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]<span class="hljs-type">int</span>)<br><br>    <span class="hljs-comment">//将第一组所有情况放入hash表</span><br><br>    <span class="hljs-keyword">for</span> _,v1:=<span class="hljs-keyword">range</span> nums1&#123;<br>       <span class="hljs-keyword">for</span> _,v2:=<span class="hljs-keyword">range</span> nums2&#123;<br>        m[(v1+v2)]++<br>       &#125;<br>    &#125;<br><br><br>    ans:=<span class="hljs-number">0</span><br>    <span class="hljs-comment">//列举第二组所有情况，看有多少满足</span><br>    <span class="hljs-keyword">for</span> _,v3:=<span class="hljs-keyword">range</span> nums3&#123;<br>        <span class="hljs-keyword">for</span> _,v4:=<span class="hljs-keyword">range</span> nums4&#123;<br>            <span class="hljs-keyword">if</span> v,ok:=m[-v3-v4];ok&#123;<br>                ans+=v<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> ans<br><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>哈希表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>快乐数</title>
+    <link href="/2024/07/23/%E5%BF%AB%E4%B9%90%E6%95%B0/"/>
+    <url>/2024/07/23/%E5%BF%AB%E4%B9%90%E6%95%B0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="快乐数"><a href="#快乐数" class="headerlink" title="快乐数"></a>快乐数</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>​    做题时卡在了思考这个数一直无限不重样循环怎么办，实际上这种情况不可能发送n位数它的各位平方和所能表示的结果是有限的，不会超过n位所能表示的范围，所以不可能无限不重样的循环</p><p>故有以下两种情况</p><ol><li>一通计算，最后算到结果为1</li><li>一通计算，算的结果开始循环</li></ol><p>解题也就分为两步</p><ol><li>算出n的各位数平方和</li><li>检查是否为1，为1，返回true，不为1，检查是否出现在结果哈希表中，不出现，加入哈希表，存在，返回true</li></ol><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">isHappy</span><span class="hljs-params">(n <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">bool</span> &#123;<br><br>    m:=<span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]<span class="hljs-keyword">struct</span>&#123;&#125;)<br><br><br>    <span class="hljs-comment">//通过哈希表判断是否有结点循环</span><br>    <span class="hljs-keyword">for</span> &#123;<br>        n=step(n)<br>        <span class="hljs-keyword">if</span> n==<span class="hljs-number">1</span>&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>        &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> _,ok:=m[n];ok&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            m[n]=<span class="hljs-keyword">struct</span>&#123;&#125;&#123;&#125;<br>        &#125;<br>    &#125;<br><br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">step</span><span class="hljs-params">(n <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span>&#123;<br>    <br>    sum:=<span class="hljs-number">0</span><br><br>    <span class="hljs-keyword">for</span> n&gt;<span class="hljs-number">0</span>&#123;<br>        sum+=(n%<span class="hljs-number">10</span>)*(n%<span class="hljs-number">10</span>)<br>        n/=<span class="hljs-number">10</span><br>    &#125;<br><br>    <span class="hljs-keyword">return</span> sum<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>哈希表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>n个协程打印数字</title>
+    <link href="/2024/07/23/n%E4%B8%AA%E5%8D%8F%E7%A8%8B%E6%89%93%E5%8D%B0%E6%95%B0%E5%AD%97/"/>
+    <url>/2024/07/23/n%E4%B8%AA%E5%8D%8F%E7%A8%8B%E6%89%93%E5%8D%B0%E6%95%B0%E5%AD%97/</url>
+    
+    <content type="html"><![CDATA[<h1 id="n个协程打印数字"><a href="#n个协程打印数字" class="headerlink" title="n个协程打印数字"></a>n个协程打印数字</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>用切片存n个channnel，启动n个协程，协程中会对channel读取，对n个channel进行赋值</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br><span class="hljs-string">&quot;fmt&quot;</span><br><span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-keyword">var</span> n = <span class="hljs-number">5</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>slice := <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>, n)<br><br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; n; i++ &#123;<br>slice[i] = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>)<br>&#125;<br><br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; n; i++ &#123;<br><span class="hljs-keyword">go</span> Print(slice[i], i)<br>&#125;<br><br>num := <span class="hljs-number">0</span><br><span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++ &#123;<br><br><span class="hljs-keyword">for</span> j := <span class="hljs-number">0</span>; j &lt; n; j++ &#123;<br>slice[j] &lt;- num<br>num++<br><br>time.Sleep(time.Second)<br>&#125;<br>&#125;<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Print</span><span class="hljs-params">(c <span class="hljs-keyword">chan</span> <span class="hljs-type">int</span>, n <span class="hljs-type">int</span>)</span></span> &#123;<br><span class="hljs-keyword">for</span> &#123;<br>fmt.Printf(<span class="hljs-string">&quot;goroutine %d print %d\n&quot;</span>, n, &lt;-c)<span class="hljs-comment">//会对channel进行读取</span><br>&#125;<br><br>&#125;<br><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>协程</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>字母异位词</title>
+    <link href="/2024/07/22/%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/"/>
+    <url>/2024/07/22/%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/</url>
+    
+    <content type="html"><![CDATA[<h1 id="字母异位词"><a href="#字母异位词" class="headerlink" title="字母异位词"></a>字母异位词</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>​      思路其实很简单，字母异位词就是字符种类一致，数量一致，用哈希表统计第一个字符串的种类和数量，然后遍历第二个字符串，这里需要注意的是go语言里没有char，可以用rune来替代访问字符串的字符</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">isAnagram</span><span class="hljs-params">(s <span class="hljs-type">string</span>, t <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">bool</span> &#123;<br>  m:=<span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">rune</span>]<span class="hljs-type">int</span>)<br><br>  <span class="hljs-keyword">for</span> _,c:=<span class="hljs-keyword">range</span> s&#123;<br>    m[c]++<br>  &#125;<br><br><br>  <span class="hljs-keyword">for</span> _,cc:=<span class="hljs-keyword">range</span> t&#123;<br>    <span class="hljs-keyword">if</span> _,ok:=m[cc];!ok&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>    &#125;<br>    m[cc]--<br>    <span class="hljs-keyword">if</span> m[cc]==<span class="hljs-number">0</span>&#123;<br>        <span class="hljs-built_in">delete</span>(m,cc)<br>    &#125;<br>  &#125;<br><br><br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">len</span>(m)==<span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>哈希表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>环形链表II</title>
+    <link href="/2024/07/22/%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II/"/>
+    <url>/2024/07/22/%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II/</url>
+    
+    <content type="html"><![CDATA[<h1 id="环形链表"><a href="#环形链表" class="headerlink" title="环形链表"></a>环形链表</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>​      快慢指针，快指针每次走两步，慢指针每次走一步，二者相遇时，让快指针指向头结点，之后快慢指针一步一步往前走，相遇点即为环的入口。</p><p>​      特别要注意判断有无环的逻辑，这里是在每次循环都检测fast及fast.Next是否为空。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for singly-linked list.</span><br><span class="hljs-comment"> * type ListNode struct &#123;</span><br><span class="hljs-comment"> *     Val int</span><br><span class="hljs-comment"> *     Next *ListNode</span><br><span class="hljs-comment"> * &#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">detectCycle</span><span class="hljs-params">(head *ListNode)</span></span> *ListNode &#123;<br>    <span class="hljs-comment">//快慢指针</span><br>    slow,fast:=head,head<br>    <span class="hljs-comment">//无环怎么办啊</span><br>    <span class="hljs-keyword">if</span> head==<span class="hljs-literal">nil</span>||head.Next==<span class="hljs-literal">nil</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>    &#125;<br>    slow=slow.Next<br>    fast=fast.Next.Next<br>    <span class="hljs-keyword">for</span> fast!=slow&#123;<span class="hljs-comment">//每次循环都要判断是否有环</span><br>        <span class="hljs-keyword">if</span> fast==<span class="hljs-literal">nil</span>||fast.Next==<span class="hljs-literal">nil</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>        &#125;<br>        slow=slow.Next<br>        fast=fast.Next.Next<br>    &#125;<br>    fast=head<br>    <span class="hljs-keyword">for</span> fast!=slow&#123;<br>        slow=slow.Next<br>        fast=fast.Next<br>    &#125;<br>    <span class="hljs-keyword">return</span> slow<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>链表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>寻找公共结点</title>
+    <link href="/2024/07/18/%E5%AF%BB%E6%89%BE%E5%85%AC%E5%85%B1%E7%BB%93%E7%82%B9/"/>
+    <url>/2024/07/18/%E5%AF%BB%E6%89%BE%E5%85%AC%E5%85%B1%E7%BB%93%E7%82%B9/</url>
+    
+    <content type="html"><![CDATA[<h1 id="寻找公共结点"><a href="#寻找公共结点" class="headerlink" title="寻找公共结点"></a>寻找公共结点</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>第一种：遍历第一个链表，将每个结点的地址存到map里</p><p>​               然后遍历第二个链表，看结点地址是否在map里，如果在，返回该结点地址</p><p>第二种：pa遍历完第一个指向第二个，pb遍历完第二个指向第一个，直到pa&#x3D;&#x3D;pb,返回pa</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getIntersectionNode</span><span class="hljs-params">(headA, headB *ListNode)</span></span> *ListNode &#123;<br>    <span class="hljs-comment">//a,b,c</span><br>    <span class="hljs-comment">//a+c</span><br>    <span class="hljs-comment">//b+c</span><br>    <span class="hljs-comment">//哈希表</span><br>    <span class="hljs-comment">//遍历第一个链表，将地址-值存到map里</span><br>    <span class="hljs-comment">//遍历第二个链表，找到第一个在map里的结点，就是公共结点</span><br>    nodes:=<span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[*ListNode]<span class="hljs-type">int</span>)<br><br>    <span class="hljs-keyword">for</span> headA!=<span class="hljs-literal">nil</span>&#123;<br>        nodes[headA]=headA.Val<br>        headA=headA.Next<br>    &#125;<br><br><br>    <span class="hljs-keyword">for</span> headB!=<span class="hljs-literal">nil</span>&#123;<br><br>          <span class="hljs-comment">//判断是否在map里</span><br>          <span class="hljs-keyword">if</span> _,ok:=nodes[headB];ok&#123;<br>            <span class="hljs-keyword">return</span> headB<br>          &#125;<br>        headB=headB.Next<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//第二种方法</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getIntersectionNode</span><span class="hljs-params">(headA, headB *ListNode)</span></span> *ListNode &#123;<br><br>    <span class="hljs-comment">//先判断head是不是空</span><br>    <span class="hljs-keyword">if</span> headA==<span class="hljs-literal">nil</span>||headB==<span class="hljs-literal">nil</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>    &#125;<br><br>    pa,pb:=headA,headB<br><br>    <span class="hljs-keyword">for</span> pa!=pb&#123;<br><br>       <span class="hljs-keyword">if</span> pa==<span class="hljs-literal">nil</span>&#123;<br>        pa=headB<br>       &#125;<span class="hljs-keyword">else</span>&#123;<br>        pa=pa.Next<br>       &#125;<br><br>       <span class="hljs-keyword">if</span> pb==<span class="hljs-literal">nil</span>&#123;<br>         pb=headA<br>       &#125;<span class="hljs-keyword">else</span>&#123;<br>        pb=pb.Next<br>       &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> pa<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>链表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>内存逃逸</title>
+    <link href="/2024/07/18/%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8/"/>
+    <url>/2024/07/18/%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="内存逃逸"><a href="#内存逃逸" class="headerlink" title="内存逃逸"></a>内存逃逸</h1><h2 id="什么是内存逃逸"><a href="#什么是内存逃逸" class="headerlink" title="什么是内存逃逸"></a>什么是内存逃逸</h2><p>​    编译期间，编译器判断一个对象的生命周期超过其作用域，就会把它分配到堆，而非栈上。保证了程序的正确性，但是增加了GC的压力</p><h2 id="内存逃逸检测"><a href="#内存逃逸检测" class="headerlink" title="内存逃逸检测"></a>内存逃逸检测</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> build --gcflags <span class="hljs-string">&#x27;-m&#x27;</span> yourprogram.<span class="hljs-keyword">go</span><br></code></pre></td></tr></table></figure><h2 id="常见的内存逃逸的例子"><a href="#常见的内存逃逸的例子" class="headerlink" title="常见的内存逃逸的例子"></a>常见的内存逃逸的例子</h2><ol><li>变量逃逸到闭包</li><li>返回局部变量的指针</li><li>函数参数为接口类型</li><li>栈空间不足</li><li>不确定对象大小</li></ol><h2 id="如何避免"><a href="#如何避免" class="headerlink" title="如何避免"></a>如何避免</h2><ol><li>函数传参少用接口类型</li><li>少用切片</li></ol><h3 id="深入浅出：Golang内存逃逸机制与性能优化技巧-内存漂移-CSDN博客"><a href="#深入浅出：Golang内存逃逸机制与性能优化技巧-内存漂移-CSDN博客" class="headerlink" title="深入浅出：Golang内存逃逸机制与性能优化技巧_内存漂移-CSDN博客"></a><a href="https://blog.csdn.net/walkskyer/article/details/135640074">深入浅出：Golang内存逃逸机制与性能优化技巧_内存漂移-CSDN博客</a></h3>]]></content>
+    
+    
+    <categories>
+      
+      <category>go底层原理鉴赏</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>GC赏析</title>
+    <link href="/2024/07/18/GC%E8%B5%8F%E6%9E%90/"/>
+    <url>/2024/07/18/GC%E8%B5%8F%E6%9E%90/</url>
+    
+    <content type="html"><![CDATA[<h1 id="GC赏析"><a href="#GC赏析" class="headerlink" title="GC赏析"></a>GC赏析</h1><h2 id="标记清除算法"><a href="#标记清除算法" class="headerlink" title="标记清除算法"></a>标记清除算法</h2><p>可达的对象标记，不可达的对象删除</p><p>优点： 简单</p><p>缺点： STW，清除数据产生碎片</p><p>​           </p><h2 id="三色标记法"><a href="#三色标记法" class="headerlink" title="三色标记法"></a>三色标记法</h2><p>黑白灰标记</p><ol><li>灰色标记为黑色，放入黑色集合</li><li>黑色可达的白色标为灰色，放入灰色集合</li><li>重复1，2，知道没有灰色，最后删除白色对象</li></ol><p>强三色不变性，弱三色不变性</p><h2 id="插入写屏障"><a href="#插入写屏障" class="headerlink" title="插入写屏障"></a>插入写屏障</h2><p> 黑色引用的白色变成灰色</p><p>栈不启动插入写屏障</p><h2 id="删除写屏障"><a href="#删除写屏障" class="headerlink" title="删除写屏障"></a>删除写屏障</h2><p>被删除的灰色或白色，变成灰色</p><h2 id="混合写屏障"><a href="#混合写屏障" class="headerlink" title="混合写屏障"></a>混合写屏障</h2><p>栈：将可达的对象标记为黑色，再之后每次在栈上创建对象，都标记为黑色</p><p>堆：被删除的对象标记为灰色，被添加的对象标记为灰色</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>go底层原理鉴赏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>垃圾回收</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>删除倒数第n个元素</title>
+    <link href="/2024/07/17/%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88/"/>
+    <url>/2024/07/17/%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88/</url>
+    
+    <content type="html"><![CDATA[<h1 id="删除倒数第n个元素"><a href="#删除倒数第n个元素" class="headerlink" title="删除倒数第n个元素"></a>删除倒数第n个元素</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>快慢指针，快的比慢的多走n步，快到到底了，慢的就是倒数第n个</p><p>细节，使用哑结点，统一处理头结点的步骤，注意边界问题</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for singly-linked list.</span><br><span class="hljs-comment"> * type ListNode struct &#123;</span><br><span class="hljs-comment"> *     Val int</span><br><span class="hljs-comment"> *     Next *ListNode</span><br><span class="hljs-comment"> * &#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">removeNthFromEnd</span><span class="hljs-params">(head *ListNode, n <span class="hljs-type">int</span>)</span></span> *ListNode &#123;<br>    <span class="hljs-comment">//哑结点</span><br>    dumy:=&amp;ListNode&#123;<span class="hljs-number">-1</span>,head&#125;<br>    <span class="hljs-comment">//快慢指针，快指针比慢指针夺走N步</span><br>    fast,slow:=dumy,dumy<br>    <span class="hljs-keyword">for</span> i:=<span class="hljs-number">0</span>;i&lt;n;i++&#123;<br>        fast=fast.Next<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> fast.Next!=<span class="hljs-literal">nil</span>&#123;<br>        slow=slow.Next<br>        fast=fast.Next<br>    &#125;<br><br>    slow.Next=slow.Next.Next<br>    <span class="hljs-keyword">return</span> dumy.Next<br>    <br><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法鉴赏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>链表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>交换结点</title>
+    <link href="/2024/07/17/%E4%BA%A4%E6%8D%A2%E7%BB%93%E7%82%B9/"/>
+    <url>/2024/07/17/%E4%BA%A4%E6%8D%A2%E7%BB%93%E7%82%B9/</url>
+    
+    <content type="html"><![CDATA[<h1 id="交换结点"><a href="#交换结点" class="headerlink" title="交换结点"></a>交换结点</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>​      递归，head&#x3D;&#x3D;nil或者head.Next&#x3D;&#x3D;nil跳出，将原链表分为三部分，第一个结点，第二个结点，后续结点。显然交换后第二个结点变为头结点。</p><p>   也就是从   第一个结点-&gt;第二个结点-&gt;剩余结点</p><p>   变成    第二个结点-&gt;第一个结点-&gt;剩余结点（交换过的）</p><p>​    新头结点&#x3D;第二个头结点</p><p>​    第一个结点.Next&#x3D;剩余结点（交换过的）</p><p>​    新头结点.Next&#x3D;第一个结点</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for singly-linked list.</span><br><span class="hljs-comment"> * type ListNode struct &#123;</span><br><span class="hljs-comment"> *     Val int</span><br><span class="hljs-comment"> *     Next *ListNode</span><br><span class="hljs-comment"> * &#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">swapPairs</span><span class="hljs-params">(head *ListNode)</span></span> *ListNode &#123;<br>    <span class="hljs-comment">//head是空,直接返回</span><br>    <span class="hljs-keyword">if</span> head==<span class="hljs-literal">nil</span>||head.Next==<span class="hljs-literal">nil</span>&#123;<br>        <span class="hljs-keyword">return</span> head<br>    &#125;<br><br>    <span class="hljs-comment">//将原链表分为三个部分进行交换</span><br>    newHead:=head.Next<br>    head.Next=swapPairs(newHead.Next)<br>    newHead.Next=head<br>    <span class="hljs-keyword">return</span> newHead<br>    <br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法鉴赏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>链表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>GMP赏析</title>
+    <link href="/2024/07/17/GMP%E8%B5%8F%E6%9E%90/"/>
+    <url>/2024/07/17/GMP%E8%B5%8F%E6%9E%90/</url>
+    
+    <content type="html"><![CDATA[<h1 id="GMP赏析"><a href="#GMP赏析" class="headerlink" title="GMP赏析"></a>GMP赏析</h1><h2 id="为什么会有这个"><a href="#为什么会有这个" class="headerlink" title="为什么会有这个"></a>为什么会有这个</h2><ol><li>单进程时代不需要调度器</li><li>多进程&#x2F;线程时代，切换进程&#x2F;线程开销太大</li><li>用户线程(协程)，线程，1:1，1:M，M:N</li></ol><h2 id="被废弃的调度器"><a href="#被废弃的调度器" class="headerlink" title="被废弃的调度器"></a>被废弃的调度器</h2><p>G放在全局队列，带来了一些缺点</p><ol><li>使用G要获取锁，加大开销</li><li>M转移G造成额外开销</li><li>系统调用增加开销</li></ol><h2 id="新的GMP调度器"><a href="#新的GMP调度器" class="headerlink" title="新的GMP调度器"></a>新的GMP调度器</h2><h3 id="GMP模型"><a href="#GMP模型" class="headerlink" title="GMP模型"></a>GMP模型</h3><ol><li>全局队列</li><li>P的本地队列</li><li>P列表</li><li>M</li></ol><p>P，M的数量？创建时机？确定了P的最大数量后，P就创建了。P的M不够用时，M创建</p><h3 id="设计策略"><a href="#设计策略" class="headerlink" title="设计策略"></a>设计策略</h3><ol><li><p>复用线程</p><ul><li>work stealing</li><li>hand off</li></ul></li><li><p>并行</p></li><li><p>抢占</p></li><li><p>全局G队列</p></li></ol><h3 id="调度流程"><a href="#调度流程" class="headerlink" title="调度流程"></a>调度流程</h3><p> 1、我们通过 go func () 来创建一个 goroutine；</p><p> 2、有两个存储 G 的队列，一个是局部调度器 P 的本地队列、一个是全局 G 队列。新创建的 G 会先保存在 P 的本地队列中，如果 P 的本地队列已经满了就会保存在全局的队列中；</p><p> 3、G 只能运行在 M 中，一个 M 必须持有一个 P，M 与 P 是 1：1 的关系。M 会从 P 的本地队列弹出一个可执行状态的 G 来执行，如果 P 的本地队列为空，就会向其他的 MP 组合偷取一个可执行的 G 来执行；</p><p> 4、一个 M 调度 G 执行的过程是一个循环机制；</p><p> 5、当 M 执行某一个 G 时候如果发生了 syscall 或则其余阻塞操作，M 会阻塞，如果当前有一些 G 在执行，runtime 会把这个线程 M 从 P 中摘除 (detach)，然后再创建一个新的操作系统的线程 (如果有空闲的线程可用就复用空闲线程) 来服务于这个 P；</p><p> 6、当 M 系统调用结束时候，这个 G 会尝试获取一个空闲的 P 执行，并放入到这个 P 的本地队列。如果获取不到 P，那么这个线程 M 变成休眠状态， 加入到空闲线程中，然后这个 G 会被放入全局队列中。</p><h3 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h3><p>参见[<a href="https://learnku.com/articles/41728#a19960">Golang三关-典藏版] Golang 调度器 GMP 原理与调度全分析 | Go 技术论坛 (learnku.com)</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>go底层原理鉴赏</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>反转链表</title>
+    <link href="/2024/07/16/%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/"/>
+    <url>/2024/07/16/%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="反转链表"><a href="#反转链表" class="headerlink" title="反转链表"></a>反转链表</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>​      这题写过好几次了，但是再写的时候还是会卡壳，首先定义一个空结点pre，当前结点cur指向head，当当前结点不为空时：</p><ol><li>next&#x3D;cur.Next</li><li>cur.Next&#x3D;pre</li><li>pre&#x3D;cur</li><li>cur&#x3D;next</li></ol><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for singly-linked list.</span><br><span class="hljs-comment"> * type ListNode struct &#123;</span><br><span class="hljs-comment"> *     Val int</span><br><span class="hljs-comment"> *     Next *ListNode</span><br><span class="hljs-comment"> * &#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reverseList</span><span class="hljs-params">(head *ListNode)</span></span> *ListNode &#123;<br>    <br>    <span class="hljs-comment">//定义一个空结点</span><br><br>    <span class="hljs-keyword">var</span> dumy *ListNode<br><br>    <span class="hljs-comment">//后一个指针指向前</span><br>    <span class="hljs-comment">//pre,cur,afetr</span><br><br>    <br>    pre,cur:=dumy,head<br>    <span class="hljs-keyword">for</span> cur!=<span class="hljs-literal">nil</span>&#123;<br><br>        next:=cur.Next<br>        cur.Next=pre<br>        pre=cur<br>        cur=next<br>        <br>    &#125;<br><br>    <span class="hljs-keyword">return</span> pre<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法赏析</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>链表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>interface鉴赏</title>
+    <link href="/2024/07/16/interface%E9%89%B4%E8%B5%8F/"/>
+    <url>/2024/07/16/interface%E9%89%B4%E8%B5%8F/</url>
+    
+    <content type="html"><![CDATA[<h1 id="interface鉴赏"><a href="#interface鉴赏" class="headerlink" title="interface鉴赏"></a>interface鉴赏</h1><h2 id="空接口结构"><a href="#空接口结构" class="headerlink" title="空接口结构"></a>空接口结构</h2><p><img src="C:\Users\1\AppData\Roaming\Typora\typora-user-images\image-20240716120127377.png" alt="image-20240716120127377"></p><h2 id="非空接口结构"><a href="#非空接口结构" class="headerlink" title="非空接口结构"></a>非空接口结构</h2><p><img src="C:\Users\1\AppData\Roaming\Typora\typora-user-images\image-20240716120156756.png" alt="image-20240716120156756"></p><h2 id="怎么查一个itab是否存在"><a href="#怎么查一个itab是否存在" class="headerlink" title="怎么查一个itab是否存在"></a>怎么查一个itab是否存在</h2><ol><li>先计算接口类型的哈希值hash1和实际类型的哈希值hash2</li><li>hash1与hash2做异或运算得到最终哈希值hash</li><li>在entries数组中找到下标为hash的位置</li><li>如果能查询到对应的itab指针(这里需要比较接口类型和实际类型，因为可能出现产生hash冲突，槽位被占用的情况)，就直接拿来使用。若没有就要再创建，然后添加到itabTable中。</li></ol><p>处理冲突方法，开放地址法，二次哈希</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>go底层原理鉴赏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>interface</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>defer底层原理鉴赏</title>
+    <link href="/2024/07/16/defer%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E9%89%B4%E8%B5%8F/"/>
+    <url>/2024/07/16/defer%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E9%89%B4%E8%B5%8F/</url>
+    
+    <content type="html"><![CDATA[<h1 id="defer底层原理鉴赏"><a href="#defer底层原理鉴赏" class="headerlink" title="defer底层原理鉴赏"></a>defer底层原理鉴赏</h1><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> _defer <span class="hljs-keyword">struct</span> &#123;<br>    siz     <span class="hljs-type">int32</span> <span class="hljs-comment">// includes both arguments and results</span><br>    started <span class="hljs-type">bool</span><br>    heap    <span class="hljs-type">bool</span><br>    <span class="hljs-comment">// openDefer indicates that this _defer is for a frame with open-coded</span><br>    <span class="hljs-comment">// defers. We have only one defer record for the entire frame (which may</span><br>    <span class="hljs-comment">// currently have 0, 1, or more defers active).</span><br>    openDefer <span class="hljs-type">bool</span><br>    sp        <span class="hljs-type">uintptr</span>  <span class="hljs-comment">// sp at time of defer</span><br>    pc        <span class="hljs-type">uintptr</span>  <span class="hljs-comment">// pc at time of defer</span><br>    fn        *funcval <span class="hljs-comment">// can be nil for open-coded defers</span><br>    _panic    *_panic  <span class="hljs-comment">// panic that is running defer</span><br>    link      *_defer<br><br>    <span class="hljs-comment">// If openDefer is true, the fields below record values about the stack</span><br>    <span class="hljs-comment">// frame and associated function that has the open-coded defer(s). sp</span><br>    <span class="hljs-comment">// above will be the sp for the frame, and pc will be address of the</span><br>    <span class="hljs-comment">// deferreturn call in the function.</span><br>    fd   unsafe.Pointer <span class="hljs-comment">// funcdata for the function associated with the frame</span><br>    varp <span class="hljs-type">uintptr</span>        <span class="hljs-comment">// value of varp for the stack frame</span><br>    <span class="hljs-comment">// framepc is the current pc associated with the stack frame. Together,</span><br>    <span class="hljs-comment">// with sp above (which is the sp associated with the stack frame),</span><br>    <span class="hljs-comment">// framepc/sp can be used as pc/sp pair to continue a stack trace via</span><br>    <span class="hljs-comment">// gentraceback().</span><br>    framepc <span class="hljs-type">uintptr</span><br>&#125;<br></code></pre></td></tr></table></figure><p><code>_defer</code>结构中字段含义：</p><ol><li><code>siz</code> 参数和返回值共占多少字节，会直接分配在_defer后面，在注册时保存参数，在执行完成时拷贝到调用者参数和返回值空间</li><li><code>started</code> 标记是否已经执行</li><li><code>heap</code> go1.13优化，标识是否为堆分配</li><li><code>openDefer</code> 表示当前 <code>defer</code> 是否经过开放编码的优化</li><li><code>sp</code> 记录调用者栈指针，可以通过它判断自己注册的defer是否已经执行完了</li><li><code>pc</code> deferproc的返回地址</li><li><code>fn</code> 是 <code>defer</code> 关键字中传入的函数，即延迟函数，如果开启了开放编码优化，可能为空；</li><li><code>_panic</code> 是触发延迟调用的结构体，可能为空；<code>_panic </code>指向当前的<code>panic</code>，表示这个defer是由这个panic触发的</li><li><code>link</code> 链表串联字段, 链到前一个注册的defer结构体</li></ol><h2 id="执行机制"><a href="#执行机制" class="headerlink" title="执行机制"></a>执行机制</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// stmt converts the statement n to SSA and adds it to s.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *state)</span></span> stmt(n *Node) &#123;<br>  <span class="hljs-comment">// ...</span><br>    <span class="hljs-keyword">case</span> ODEFER:<br>    <span class="hljs-comment">// ...</span><br>        <span class="hljs-keyword">if</span> s.hasOpenDefers &#123;<br>            s.openDeferRecord(n.Left) <span class="hljs-comment">// 开放编码</span><br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            d := callDefer  <span class="hljs-comment">// 默认是堆上实现</span><br>            <span class="hljs-keyword">if</span> n.Esc == EscNever &#123;<br>                d = callDeferStack <span class="hljs-comment">// 栈上实现</span><br>            &#125;<br>            s.callResult(n.Left, d)<br>        &#125;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></td></tr></table></figure><p>什么时候堆分配，什么时候栈分配，什么时候通过内联实现，堆分配通过内存池</p><h2 id="循环体里能不能用defer，为什么"><a href="#循环体里能不能用defer，为什么" class="headerlink" title="循环体里能不能用defer，为什么"></a>循环体里能不能用defer，为什么</h2><ol><li>内存逃逸-&gt;栈分配-&gt;性能问题</li><li>一些系统问题，如  for… {……defer os.closed()},可能会导致文件描述符用光</li></ol><h2 id="defer执行顺序"><a href="#defer执行顺序" class="headerlink" title="defer执行顺序"></a>defer执行顺序</h2><p>后进先出，因为每次都从头结点取出</p><h2 id="defer可以更改return的值吗"><a href="#defer可以更改return的值吗" class="headerlink" title="defer可以更改return的值吗"></a>defer可以更改return的值吗</h2><p>可以，原因</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go">设置返回值<br><span class="hljs-keyword">defer</span><br>返回<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>go底层原理鉴赏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>defer</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>设计链表</title>
+    <link href="/2024/07/15/%E8%AE%BE%E8%AE%A1%E9%93%BE%E8%A1%A8/"/>
+    <url>/2024/07/15/%E8%AE%BE%E8%AE%A1%E9%93%BE%E8%A1%A8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="设计链表"><a href="#设计链表" class="headerlink" title="设计链表"></a>设计链表</h1><h2 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h2><p>​       一看就会，一做就废，使用p.next时一定要先注意p是否有意义</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> MyLinkedList <span class="hljs-keyword">struct</span> &#123;<br>   val <span class="hljs-type">int</span><br>   next *MyLinkedList<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Constructor</span><span class="hljs-params">()</span></span> MyLinkedList &#123;<br>    <span class="hljs-keyword">return</span> MyLinkedList&#123;val:<span class="hljs-number">0</span>,next:<span class="hljs-literal">nil</span>&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(this *MyLinkedList)</span></span> Get(index <span class="hljs-type">int</span>) <span class="hljs-type">int</span> &#123;<br>   <span class="hljs-comment">//找头结点</span><br>   p:=this.next<br>   <span class="hljs-keyword">if</span> index&lt;<span class="hljs-number">0</span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span><br>   &#125;<br><br>   i:=<span class="hljs-number">0</span><br>   <span class="hljs-keyword">for</span> p!=<span class="hljs-literal">nil</span>&#123;<br>    <span class="hljs-keyword">if</span> i==index&#123;<br>        <span class="hljs-keyword">return</span> p.val<br>    &#125;<br>    p=p.next<br>    i++<br>   &#125;<br>   <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span><br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(this *MyLinkedList)</span></span> AddAtHead(val <span class="hljs-type">int</span>)  &#123;<br>    head:=this<br>    <br>    p:=&amp;MyLinkedList&#123;val:val,next:<span class="hljs-literal">nil</span>&#125;<br>    p.next=head.next<br>    head.next=p<br><br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(this *MyLinkedList)</span></span> AddAtTail(val <span class="hljs-type">int</span>)  &#123;<br>    p:=&amp;MyLinkedList&#123;val:val,next:<span class="hljs-literal">nil</span>&#125;<br><br>    <span class="hljs-comment">//遍历到最后</span><br>    q:=this<br>    <span class="hljs-keyword">for</span> q.next!=<span class="hljs-literal">nil</span>&#123;<br>        q=q.next<br>    &#125;<br>    q.next=p<br><br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(this *MyLinkedList)</span></span> AddAtIndex(index <span class="hljs-type">int</span>, val <span class="hljs-type">int</span>)  &#123;<br><br>    <span class="hljs-keyword">if</span> index&lt;<span class="hljs-number">0</span>&#123;<br>    <span class="hljs-keyword">return</span> <br>   &#125;<br>    <br>    p:=&amp;MyLinkedList&#123;val:val,next:<span class="hljs-literal">nil</span>&#125;<br><br>    q:=this<br>    i:=<span class="hljs-number">-1</span><br><br>    <span class="hljs-keyword">for</span> q!=<span class="hljs-literal">nil</span>&amp;&amp;i!=index<span class="hljs-number">-1</span>&#123;<span class="hljs-comment">//找到index前一个结点</span><br>       <br>        q=q.next<br>        i++<br>    &#125;<br>    <span class="hljs-keyword">if</span> q==<span class="hljs-literal">nil</span>&#123;<br>        <span class="hljs-keyword">return</span><br>    &#125;<br><br>    <span class="hljs-comment">//超过？？？</span><br>    <span class="hljs-keyword">if</span> i==index<span class="hljs-number">-1</span>&#123;<br>        p.next=q.next<br>        q.next=p<br>    &#125;<br>    <br>&#125;<br><br><span class="hljs-comment">//1-&gt;3</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(this *MyLinkedList)</span></span> DeleteAtIndex(index <span class="hljs-type">int</span>)  &#123;<br><span class="hljs-comment">//找到第index-1个</span><br>    q:=this<br>    i:=<span class="hljs-number">-1</span><br><br>    <span class="hljs-keyword">for</span> q!=<span class="hljs-literal">nil</span>&amp;&amp;i!=index<span class="hljs-number">-1</span>&#123;<span class="hljs-comment">//找到index前一个结点</span><br>        q=q.next<br>        i++<br>    &#125;<br>    <span class="hljs-keyword">if</span> q==<span class="hljs-literal">nil</span>&#123;<br>        <span class="hljs-keyword">return</span><br>    &#125;<br>    <span class="hljs-keyword">if</span> i==index<span class="hljs-number">-1</span>&#123;<br>        <span class="hljs-keyword">if</span> q.next!=<span class="hljs-literal">nil</span>&#123;<br>            q.next=q.next.next<br>        &#125;<br>    &#125;<br>&#125;<br><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Your MyLinkedList object will be instantiated and called as such:</span><br><span class="hljs-comment"> * obj := Constructor();</span><br><span class="hljs-comment"> * param_1 := obj.Get(index);</span><br><span class="hljs-comment"> * obj.AddAtHead(val);</span><br><span class="hljs-comment"> * obj.AddAtTail(val);</span><br><span class="hljs-comment"> * obj.AddAtIndex(index,val);</span><br><span class="hljs-comment"> * obj.DeleteAtIndex(index);</span><br><span class="hljs-comment"> */</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法鉴赏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>链表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>context底层原理鉴赏</title>
+    <link href="/2024/07/15/context%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E9%89%B4%E8%B5%8F/"/>
+    <url>/2024/07/15/context%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E9%89%B4%E8%B5%8F/</url>
+    
+    <content type="html"><![CDATA[<h1 id="context底层原理鉴赏"><a href="#context底层原理鉴赏" class="headerlink" title="context底层原理鉴赏"></a>context底层原理鉴赏</h1><h1 id="Context接口"><a href="#Context接口" class="headerlink" title="Context接口"></a>Context接口</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Context <span class="hljs-keyword">interface</span> &#123;<br> Deadline() (deadline time.Time, ok <span class="hljs-type">bool</span>)<br> Done() &lt;-<span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;<br> Err() <span class="hljs-type">error</span><br> Value(key <span class="hljs-keyword">interface</span>&#123;&#125;) <span class="hljs-keyword">interface</span>&#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="context应用场景"><a href="#context应用场景" class="headerlink" title="context应用场景"></a>context应用场景</h2><ol><li>传递数据</li><li>传递取消信号</li></ol><h2 id="context数据结构实现"><a href="#context数据结构实现" class="headerlink" title="context数据结构实现"></a>context数据结构实现</h2><ul><li>emptyCtx:实现了Contxet接口，不具备任何功能</li><li>cancelCtx：实现了Context接口，Canceler接口，通过取消函数实现通知</li><li>timerCtx: 实现了Context接口，内部封装cancelCtx，通过deadline定时通知</li><li>valueCtx：实现了Context接口，内部封装Context，封装了k&#x2F;v</li></ul><h2 id="更多"><a href="#更多" class="headerlink" title="更多"></a>更多</h2><p><a href="https://segmentfault.com/a/1190000040917752">【Go语言】小白也能看懂的context包详解：从入门到精通 - 个人文章 - SegmentFault 思否</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>go底层原理鉴赏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>context</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>移除链表元素</title>
+    <link href="/2024/07/14/%E7%A7%BB%E9%99%A4%E9%93%BE%E8%A1%A8%E5%85%83%E7%B4%A0/"/>
+    <url>/2024/07/14/%E7%A7%BB%E9%99%A4%E9%93%BE%E8%A1%A8%E5%85%83%E7%B4%A0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="移除链表元素"><a href="#移除链表元素" class="headerlink" title="移除链表元素"></a>移除链表元素</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>​      哑结点，统一头结点</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for singly-linked list.</span><br><span class="hljs-comment"> * type ListNode struct &#123;</span><br><span class="hljs-comment"> *     Val int</span><br><span class="hljs-comment"> *     Next *ListNode</span><br><span class="hljs-comment"> * &#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">removeElements</span><span class="hljs-params">(head *ListNode, val <span class="hljs-type">int</span>)</span></span> *ListNode &#123;<br><span class="hljs-comment">//怎么移除一个元素</span><br><br><span class="hljs-comment">//哑结点</span><br>dummyHead:=&amp;ListNode&#123;Next:head&#125;<br><br><span class="hljs-keyword">for</span> temp:=dummyHead;temp.Next!=<span class="hljs-literal">nil</span>;&#123;<br>    <span class="hljs-keyword">if</span> temp.Next.Val==val&#123;<br>       temp.Next=temp.Next.Next<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        temp=temp.Next<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">return</span> dummyHead.Next<br><br><span class="hljs-comment">//删除</span><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法鉴赏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>链表</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>螺旋矩阵2</title>
+    <link href="/2024/07/13/%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B52/"/>
+    <url>/2024/07/13/%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B52/</url>
+    
+    <content type="html"><![CDATA[<h1 id="螺旋矩阵II"><a href="#螺旋矩阵II" class="headerlink" title="螺旋矩阵II"></a>螺旋矩阵II</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>​      关键是处理好边界，考虑上下左右边界，上&lt;&#x3D;下，左&lt;&#x3D;右，按照螺旋方向遍历即可</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code class="hljs">  <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">generateMatrix</span><span class="hljs-params">(n <span class="hljs-type">int</span>)</span></span> [][]<span class="hljs-type">int</span> &#123;<br><span class="hljs-comment">//一圈一圈上下左右边界</span><br><span class="hljs-comment">//up,down,left,right</span><br><span class="hljs-comment">//ans</span><br>ans:=<span class="hljs-built_in">make</span>([][]<span class="hljs-type">int</span>,n)<br><span class="hljs-keyword">for</span> i:= <span class="hljs-keyword">range</span> ans&#123;<br>    ans[i]=<span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>,n)<br>&#125;<br><br><span class="hljs-comment">//边界是什么？up&lt;=down,left&lt;=right,</span><br>  up:=<span class="hljs-number">0</span><br>  down:=n<span class="hljs-number">-1</span><br>  left:=<span class="hljs-number">0</span><br>  right:=n<span class="hljs-number">-1</span><br>  <br>  value:=<span class="hljs-number">1</span><br>  <span class="hljs-keyword">for</span> up&lt;=down&amp;&amp;left&lt;=right&#123;<br>     <br>     <span class="hljs-keyword">for</span> j:=left;j&lt;=right;j++&#123;<br>        ans[up][j]=value<br>        value++<br>     &#125;<br>     up++<br><br>     <span class="hljs-keyword">for</span> i:=up;i&lt;=down;i++&#123;<br>        ans[i][right]=value<br>        value++<br>     &#125;<br>     right--<br><br>     <span class="hljs-keyword">if</span> up&lt;=down&#123;<span class="hljs-comment">//要记得再次判断</span><br>        <span class="hljs-keyword">for</span> j:=right;j&gt;=left;j--&#123;<br>          ans[down][j]=value<br>          value++<br>        &#125;<br>        down--<br>     &#125;<br> <br>     <span class="hljs-keyword">if</span> left&lt;=right&#123;<span class="hljs-comment">//要记得再次判断</span><br>        <span class="hljs-keyword">for</span> i:=down;i&gt;=up;i--&#123;<br>          ans[i][left]=value<br>          value++<br>        &#125;<br>        left++<br>     &#125;<br><br>  &#125;<br>  <span class="hljs-keyword">return</span> ans<br>&#125;<br></code></pre></td></tr></table></figure></code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>算法鉴赏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>数组</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>channel底层原理赏析</title>
     <link href="/2024/07/13/channel%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/"/>
     <url>/2024/07/13/channel%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/</url>
     
-    <content type="html"><![CDATA[<h1 id="channel底层原理赏析"><a href="#channel底层原理赏析" class="headerlink" title="channel底层原理赏析"></a>channel底层原理赏析</h1><h2 id="channel底层结构"><a href="#channel底层结构" class="headerlink" title="channel底层结构"></a>channel底层结构</h2><p><img src="https://ask.qcloudimg.com/http-save/yehe-6019987/bk5bw2rxaz.png"></p><p>简单说明：</p><ul><li><code>buf</code>是有缓冲的channel所特有的结构，用来存储缓存数据。是个循环链表</li><li><code>sendx</code>和<code>recvx</code>用于记录<code>buf</code>这个循环链表中的<del>发送或者接收的</del>index</li><li><code>lock</code>是个互斥锁。</li><li><code>recvq</code>和<code>sendq</code>分别是接收(&lt;-channel)或者发送(channel &lt;- xxx)的goroutine抽象出来的结构体(sudog)的队列。是个双向链表</li></ul><p>源码位于<code>/runtime/chan.go</code>中(目前版本：1.11)。结构体为<code>hchan</code>。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> hchan <span class="hljs-keyword">struct</span> &#123;<br>    qcount   <span class="hljs-type">uint</span>           <span class="hljs-comment">// total data in the queue</span><br>    dataqsiz <span class="hljs-type">uint</span>           <span class="hljs-comment">// size of the circular queue</span><br>    buf      unsafe.Pointer <span class="hljs-comment">// points to an array of dataqsiz elements</span><br>    elemsize <span class="hljs-type">uint16</span><br>    closed   <span class="hljs-type">uint32</span><br>    elemtype *_type <span class="hljs-comment">// element type</span><br>    sendx    <span class="hljs-type">uint</span>   <span class="hljs-comment">// send index</span><br>    recvx    <span class="hljs-type">uint</span>   <span class="hljs-comment">// receive index</span><br>    recvq    waitq  <span class="hljs-comment">// list of recv waiters</span><br>    sendq    waitq  <span class="hljs-comment">// list of send waiters</span><br><br>    <span class="hljs-comment">// lock protects all fields in hchan, as well as several</span><br>    <span class="hljs-comment">// fields in sudogs blocked on this channel.</span><br>    <span class="hljs-comment">//</span><br>    <span class="hljs-comment">// Do not change another G&#x27;s status while holding this lock</span><br>    <span class="hljs-comment">// (in particular, do not ready a G), as this can deadlock</span><br>    <span class="hljs-comment">// with stack shrinking.</span><br>    lock mutex<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="channel读操作"><a href="#channel读操作" class="headerlink" title="channel读操作"></a>channel读操作</h2><ol><li>有写进程在阻塞，读buf，再将写进程数据写入buf，唤醒写进程</li><li>没有写进程，buf不为空，读buf</li><li>没有写进程，buf为空,挂起</li><li>特别的<ul><li>channel&#x3D;&#x3D;nil,panic</li><li>channel&#x3D;&#x3D;closed,零值</li></ul></li></ol><h2 id="channel写操作"><a href="#channel写操作" class="headerlink" title="channel写操作"></a>channel写操作</h2><ol><li>有读进程在阻塞，直接将数据写到读进程的数据部分，唤醒读进程</li><li>没有读进程阻塞channel有缓冲空间，写入channel缓冲</li><li>没有读进程阻塞channel没有缓冲空间，挂起</li><li>特别的<ul><li>channel&#x3D;&#x3D;nil,panic</li><li>channel&#x3D;&#x3D;closed,panic</li></ul></li></ol><h2 id="channel关闭操作"><a href="#channel关闭操作" class="headerlink" title="channel关闭操作"></a>channel关闭操作</h2><p>  对已经关闭的channel，写，关闭，都是返回panic，读，返回零值</p><h2 id="select的阻塞与非阻塞"><a href="#select的阻塞与非阻塞" class="headerlink" title="select的阻塞与非阻塞"></a>select的阻塞与非阻塞</h2><p>  case是随机选取的，阻塞就是不能立即执行，非阻塞就是能立即执行</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="channel底层原理赏析"><a href="#channel底层原理赏析" class="headerlink" title="channel底层原理赏析"></a>channel底层原理赏析</h1><h2 id="channel底层结构"><a href="#channel底层结构" class="headerlink" title="channel底层结构"></a>channel底层结构</h2><p><img src="https://ask.qcloudimg.com/http-save/yehe-6019987/bk5bw2rxaz.png"></p><p>简单说明：</p><ul><li><code>buf</code>是有缓冲的channel所特有的结构，用来存储缓存数据。是个循环链表</li><li><code>sendx</code>和<code>recvx</code>用于记录<code>buf</code>这个循环链表中的<del>发送或者接收的</del>index</li><li><code>lock</code>是个互斥锁。</li><li><code>recvq</code>和<code>sendq</code>分别是接收(&lt;-channel)或者发送(channel &lt;- xxx)的goroutine抽象出来的结构体(sudog)的队列。是个双向链表</li></ul><p>源码位于<code>/runtime/chan.go</code>中(目前版本：1.11)。结构体为<code>hchan</code>。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> hchan <span class="hljs-keyword">struct</span> &#123;<br>    qcount   <span class="hljs-type">uint</span>           <span class="hljs-comment">// total data in the queue</span><br>    dataqsiz <span class="hljs-type">uint</span>           <span class="hljs-comment">// size of the circular queue</span><br>    buf      unsafe.Pointer <span class="hljs-comment">// points to an array of dataqsiz elements</span><br>    elemsize <span class="hljs-type">uint16</span><br>    closed   <span class="hljs-type">uint32</span><br>    elemtype *_type <span class="hljs-comment">// element type</span><br>    sendx    <span class="hljs-type">uint</span>   <span class="hljs-comment">// send index</span><br>    recvx    <span class="hljs-type">uint</span>   <span class="hljs-comment">// receive index</span><br>    recvq    waitq  <span class="hljs-comment">// list of recv waiters</span><br>    sendq    waitq  <span class="hljs-comment">// list of send waiters</span><br><br>    <span class="hljs-comment">// lock protects all fields in hchan, as well as several</span><br>    <span class="hljs-comment">// fields in sudogs blocked on this channel.</span><br>    <span class="hljs-comment">//</span><br>    <span class="hljs-comment">// Do not change another G&#x27;s status while holding this lock</span><br>    <span class="hljs-comment">// (in particular, do not ready a G), as this can deadlock</span><br>    <span class="hljs-comment">// with stack shrinking.</span><br>    lock mutex<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="channel读操作"><a href="#channel读操作" class="headerlink" title="channel读操作"></a>channel读操作</h2><ol><li>有写进程在阻塞，读buf，再将写进程数据写入buf，唤醒写进程</li><li>没有写进程，buf不为空，读buf</li><li>没有写进程，buf为空,挂起</li><li>特别的<ul><li>channel&#x3D;&#x3D;nil,永久挂起</li><li>channel&#x3D;&#x3D;closed,零值</li></ul></li></ol><h2 id="channel写操作"><a href="#channel写操作" class="headerlink" title="channel写操作"></a>channel写操作</h2><ol><li>有读进程在阻塞，直接将数据写到读进程的数据部分，唤醒读进程</li><li>没有读进程阻塞channel有缓冲空间，写入channel缓冲</li><li>没有读进程阻塞channel没有缓冲空间，挂起</li><li>特别的<ul><li>channel&#x3D;&#x3D;nil,永久挂起</li><li>channel&#x3D;&#x3D;closed,panic</li></ul></li></ol><h2 id="channel关闭操作"><a href="#channel关闭操作" class="headerlink" title="channel关闭操作"></a>channel关闭操作</h2><p>  对已经关闭的channel，写，关闭，都是返回panic，读，返回零值</p><p>关闭nil的channel,panic</p><h2 id="select的阻塞与非阻塞"><a href="#select的阻塞与非阻塞" class="headerlink" title="select的阻塞与非阻塞"></a>select的阻塞与非阻塞</h2><p>  case是随机选取的，阻塞就是不能立即执行，非阻塞就是能立即执行</p>]]></content>
     
     
     <categories>

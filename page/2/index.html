@@ -257,15 +257,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/02/21/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" target="_self">
-          我的第一篇文章
+        <a href="/2024/07/26/AOF%E8%AF%A6%E8%A7%A3/" target="_self">
+          AOF详解
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/02/21/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/26/AOF%E8%AF%A6%E8%A7%A3/" target="_self">
         <div>
-          
+          AOF详解AOF是默认开启的吗AOF不是默认开启的，需要手动开启，RDB是默认开启的 AOF重写有什么作用首先AOF重写是为了解决一个问题，就是随着命令的写入，一些在AOF文件里的命令是冗余的，比如set a 1,set a       2,这里第一条命令就是冗余的。AOF重写能够根据当前数据的状态，从新写AOF文件 AOF重写流程主进程fork一个子进程，子进程根据当前数据状态进行AOF文件重写
         </div>
       </a>
 
@@ -273,74 +273,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-02-21 12:40" pubdate>
-              2024-02-21
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/02/21/hello-world/" target="_self">
-          Hello World
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/02/21/hello-world/" target="_self">
-        <div>
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-02-21 11:35" pubdate>
-              2024-02-21
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2021/06/10/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/" target="_self">
-          测试文章
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2021/06/10/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/" target="_self">
-        <div>
-          这是一篇测试文章
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-06-10 16:35" pubdate>
-              2021-06-10
+            <time datetime="2024-07-26 11:41" pubdate>
+              2024-07-26
             </time>
           </div>
         
@@ -355,7 +289,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
   
   
 
@@ -370,7 +304,556 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/%E5%8E%9F%E5%88%9B/">#原创</a>
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/26/RDB%E8%AF%A6%E8%A7%A3/" target="_self">
+          RDB详解
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/26/RDB%E8%AF%A6%E8%A7%A3/" target="_self">
+        <div>
+          RDB详解RDB本质RDB本质就是二进制形式的rdb文件 RDB执行流程 主进程fork出一个子进程用于执行RDB操作 子进程将快照存入临时rdb文件 用该临时rdb文件替换旧的rdb文件  RDB如何开启呢 配置定时触发，触发时使用的时后台持久化方式 手动触发。使用save命令，底层调用的时阻塞时持久化方式，使用bgsave，底层调用时使用的是后台持久化方式 如果redis正常关闭，那么会执行阻
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-26 10:19" pubdate>
+              2024-07-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/25/redis%E6%8C%81%E4%B9%85%E5%8C%96/" target="_self">
+          redis持久化
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/25/redis%E6%8C%81%E4%B9%85%E5%8C%96/" target="_self">
+        <div>
+          redis持久化为什么redis需要持久化持久化就是将内存的数据放入磁盘长期存储起来，redis的主要应用场景是缓存，但即使是缓存，我们也希望它重启之后依然存在，而不是请求一下打到存储，另外redis本身也可以用作存储，这时候就更需要持久化了 持久化算法RDB和AOF RDB和AOF的本质区别一个是基于快照存储的二进制文件，一个是操作的日志文件 非要选一个，RDB和AOF选哪个根据需求，如果追求性
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-25 12:54" pubdate>
+              2024-07-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/25/redis%E9%87%8C%E7%9A%84%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E9%97%AE%E9%A2%98/" target="_self">
+          redis里的内存淘汰问题
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/25/redis%E9%87%8C%E7%9A%84%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E9%97%AE%E9%A2%98/" target="_self">
+        <div>
+          redis里的内存淘汰问题什么是内存淘汰​     内存满了，需要淘汰一些对象所占用的内存 redis里内存淘汰算法有哪些主要有8种  未开启淘汰机制。内存满了不会淘汰 开启淘汰机制，根据淘汰时间，和不根据淘汰时间的都有LRU，LFU，RANDOM三种，根据淘汰时间的还有ttl算法  redis里的LRU算法不是标准的LRU算法，标准的LRU算法需要用到双链表来对对象进行管理，占用内存过多，所以r
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-25 12:22" pubdate>
+              2024-07-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/25/redis%E5%8D%95%E7%BA%BF%E7%A8%8B/" target="_self">
+          redis单线程
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/25/redis%E5%8D%95%E7%BA%BF%E7%A8%8B/" target="_self">
+        <div>
+          redis单线程redis是单线程的吗核心操作是单线程 也有多线程的，比如一些同步操作，unlink等 redis为什么是单线程的redis的性能瓶颈是IO操作，不是cpu,使用多线程也会有如下开销  线程切换 线程本身大小也占据内存 同步机制也有开销，如互斥锁  为什么单线程性能也这么高 在内存里操作，本来就快 redis的数据结构牛逼 redis实现了IO多路复用
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-25 11:51" pubdate>
+              2024-07-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/25/redis%E5%86%85%E5%AD%98%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/" target="_self">
+          redis内存存储结构
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/25/redis%E5%86%85%E5%AD%98%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/" target="_self">
+        <div>
+          redis内存存储结构redis结构体12345678910typedef struct redisDb &#123;    dict *dict;                 /* The keyspace for this DB */    dict *expires;              /* Timeout of keys with a timeout set*/    dict
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-25 11:11" pubdate>
+              2024-07-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/24/%E5%9B%9B%E6%A0%91%E4%B9%8B%E5%92%8CII/" target="_self">
+          四数之和II
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/24/%E5%9B%9B%E6%A0%91%E4%B9%8B%E5%92%8CII/" target="_self">
+        <div>
+          四数之和II思路将四个数组分组，A,B为一组，C,D为一组，将第一组所有和的情况以及出现的次数放入map里，然后遍历第二组所有和的情况 代码12345678910111213141516171819202122232425262728func fourSumCount(nums1 []int, nums2 []int, nums3 []int, nums4 []int) int &#123;
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-24 21:28" pubdate>
+              2024-07-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/" class="category-chain-item">算法学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/">#哈希表</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/23/%E5%BF%AB%E4%B9%90%E6%95%B0/" target="_self">
+          快乐数
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/23/%E5%BF%AB%E4%B9%90%E6%95%B0/" target="_self">
+        <div>
+          快乐数思路​    做题时卡在了思考这个数一直无限不重样循环怎么办，实际上这种情况不可能发送n位数它的各位平方和所能表示的结果是有限的，不会超过n位所能表示的范围，所以不可能无限不重样的循环 故有以下两种情况  一通计算，最后算到结果为1 一通计算，算的结果开始循环  解题也就分为两步  算出n的各位数平方和 检查是否为1，为1，返回true，不为1，检查是否出现在结果哈希表中，不出现，加入哈希表
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-23 22:06" pubdate>
+              2024-07-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/" class="category-chain-item">算法学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/">#哈希表</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/23/n%E4%B8%AA%E5%8D%8F%E7%A8%8B%E6%89%93%E5%8D%B0%E6%95%B0%E5%AD%97/" target="_self">
+          n个协程打印数字
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/23/n%E4%B8%AA%E5%8D%8F%E7%A8%8B%E6%89%93%E5%8D%B0%E6%95%B0%E5%AD%97/" target="_self">
+        <div>
+          n个协程打印数字思路用切片存n个channnel，启动n个协程，协程中会对channel读取，对n个channel进行赋值 代码1234567891011121314151617181920212223242526272829303132333435363738394041package mainimport (	&quot;fmt&quot;	&quot;time&quot;)var n = 5
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-23 12:06" pubdate>
+              2024-07-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/" class="category-chain-item">算法学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%8D%8F%E7%A8%8B/">#协程</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/22/%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/" target="_self">
+          字母异位词
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/22/%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/" target="_self">
+        <div>
+          字母异位词思路​      思路其实很简单，字母异位词就是字符种类一致，数量一致，用哈希表统计第一个字符串的种类和数量，然后遍历第二个字符串，这里需要注意的是go语言里没有char，可以用rune来替代访问字符串的字符 代码123456789101112131415161718192021func isAnagram(s string, t string) bool &#123;  m:=make
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-22 22:38" pubdate>
+              2024-07-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/" class="category-chain-item">算法学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/">#哈希表</a>
             
           </div>
         
@@ -382,7 +865,7 @@
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><a class="page-number" href="/page/5/#board">5</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

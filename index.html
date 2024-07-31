@@ -257,15 +257,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/07/13/channel%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/" target="_self">
-          channel底层原理赏析
+        <a href="/2024/07/31/hash%E5%AD%A6%E4%B9%A0/" target="_self">
+          hash学习
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/13/channel%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/31/hash%E5%AD%A6%E4%B9%A0/" target="_self">
         <div>
-          channel底层原理赏析channel底层结构 简单说明：  buf是有缓冲的channel所特有的结构，用来存储缓存数据。是个循环链表 sendx和recvx用于记录buf这个循环链表中的发送或者接收的index lock是个互斥锁。 recvq和sendq分别是接收(&lt;-channel)或者发送(channel &lt;- xxx)的goroutine抽象出来的结构体(sudog)的队
+          hash学习hash的编码方式 ziplist,在键值的长度较小，键值对数量较少时使用 其他情况使用hashTable  查找某个key的平均时间复杂度底层结构是ziplist时，O(n),hashTable O(1) 查找元素总数时间复杂度O(1),used记录的
         </div>
       </a>
 
@@ -273,8 +273,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-07-13 12:52" pubdate>
-              2024-07-13
+            <time datetime="2024-07-31 13:34" pubdate>
+              2024-07-31
             </time>
           </div>
         
@@ -289,7 +289,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/go%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E9%89%B4%E8%B5%8F/" class="category-chain-item">go底层原理鉴赏</a>
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
   
   
 
@@ -304,7 +304,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/channel-select/">#channel select</a>
+              <a href="/tags/redis/">#redis</a>
             
           </div>
         
@@ -318,15 +318,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/07/12/sync-map%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/" target="_self">
-          sync.map原理赏析
+        <a href="/2024/07/31/set%E5%AD%A6%E4%B9%A0/" target="_self">
+          set学习
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/12/sync-map%E5%8E%9F%E7%90%86%E8%B5%8F%E6%9E%90/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/31/set%E5%AD%A6%E4%B9%A0/" target="_self">
         <div>
-          sync.map原理赏析sync.map底层结构​        主要是由两个map分工协作，一个是read map,一个是dirty map。其中read map负责将读，更新，删除操作的流量替dirty挡下来，dirty map为read map进行兜底。read map通过原子操作进行读，更新，删除，与锁相比更轻量化。 123456789101112type Map struct &#123
+          set学习set的编码方式et的底层编码方式是IntSet和HashTable，当元素都是整数，且数量少于512时，使用第二章，否则使用第一种 set是有序的吗set的底层编码方式是IntSet和HashTable，第一种是有序的，第二种是无序的，不过一般不要依赖Set的顺序，业务中始终把Set当初无序的 set为什么要用两种编码方式数据元素少时，节省内存，多时，使用hashTable加快查询效率
         </div>
       </a>
 
@@ -334,8 +334,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-07-12 12:20" pubdate>
-              2024-07-12
+            <time datetime="2024-07-31 13:06" pubdate>
+              2024-07-31
             </time>
           </div>
         
@@ -350,7 +350,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/go%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E9%89%B4%E8%B5%8F/" class="category-chain-item">go底层原理鉴赏</a>
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
   
   
 
@@ -362,6 +362,13 @@
           </div>
         
         
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
+        
       </div>
     </article>
   </div>
@@ -372,15 +379,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/07/11/%E9%95%BF%E5%BA%A6%E6%9C%80%E5%B0%8F%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84/" target="_self">
-          长度最小的子数组
+        <a href="/2024/07/31/list%E7%90%86%E8%A7%A3/" target="_self">
+          list理解
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/11/%E9%95%BF%E5%BA%A6%E6%9C%80%E5%B0%8F%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/31/list%E7%90%86%E8%A7%A3/" target="_self">
         <div>
-          长度最小的子数组解题思路滑动窗口  end指针往后滑动，直到找到总和大于target的 此时，start往后移动，缩小子数组范围 记录子数组长度，返回最小  代码1234567891011121314151617181920212223func minSubArrayLen(target int, nums []int) int &#123;//滑动窗口，后面的指针一直往后移动，前面的指针，也往前
+          list理解list是完全先入先出的吗不是，list是一个双端操作对象，不仅可以先入先出，还可以后入先出 list对象底层编码方式跟redis版本有关 3.2之前使用ziplist+linkedlist,当单个数据长度较小，数据个数少，使用ziplist，否则使用linkedlist 3.2之后使用quicklist，这是一种结合了ziplist和linkedlist的数据结构，它是一个双端链表，
         </div>
       </a>
 
@@ -388,8 +395,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-07-11 23:51" pubdate>
-              2024-07-11
+            <time datetime="2024-07-31 11:56" pubdate>
+              2024-07-31
             </time>
           </div>
         
@@ -404,7 +411,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/" class="category-chain-item">算法学习</a>
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
   
   
 
@@ -416,113 +423,12 @@
           </div>
         
         
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/07/11/%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E5%B9%B3%E6%96%B9/" target="_self">
-          有序数组平方
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/11/%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E5%B9%B3%E6%96%B9/" target="_self">
-        <div>
-          代码1234567891011121314151617181920func sortedSquares(nums []int) []int &#123;    n:=len(nums)    ans:=make([]int,n)    //从两边开始，倒着,平方大的拍后边    l:=0    r:=n-1    index:=n-1    for l&lt;=r&#123;       if n
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-07-11 21:47" pubdate>
-              2024-07-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
             
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/" class="category-chain-item">算法学习</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/07/11/golang%E4%B8%ADmap%E8%B5%8F%E6%9E%90/" target="_self">
-          golang中map赏析
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/11/golang%E4%B8%ADmap%E8%B5%8F%E6%9E%90/" target="_self">
-        <div>
-          golang中map实现原理map数据结构&emsp;      go语言中map是通过哈希表来实现的，其map是一个指向hmap的指针，具体细节如下图  下面是关键字段解释    字段名称 含义    count 键值对对数   *buckets 指向存储桶的数组   *extra 指向溢出桶   map访问元素的过程 检查map是否为空或者无数据，如果为空或者无数据，返回空值  检查map是否
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-07-11 19:09" pubdate>
-              2024-07-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
+              <a href="/tags/redis/">#redis</a>
             
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/go%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E9%89%B4%E8%B5%8F/" class="category-chain-item">go底层原理鉴赏</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
           </div>
-        
         
       </div>
     </article>
@@ -534,15 +440,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/07/10/%E7%A7%BB%E9%99%A4%E5%85%83%E7%B4%A0/" target="_self">
-          移除元素
+        <a href="/2024/07/30/%E5%8F%8D%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2II/" target="_self">
+          反转字符串II
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/10/%E7%A7%BB%E9%99%A4%E5%85%83%E7%B4%A0/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/30/%E5%8F%8D%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2II/" target="_self">
         <div>
-          移除元素思路​        双指针，一个用于遍历，一个用于标识已经处理完毕的最后一个位置 代码12345678910111213141516171819202122232425func removeElement(nums []int, val int) int &#123;    //交换    //遍历，双指针，一个用于指示已处理完毕的数组末尾，一个用于遍历    n:=len(nums)
+          反转字符串II思路思路就是模拟就可以了，但是go语言种string不可改变，要先转为切片[]byte,然后切片再转回字符串 代码123456789101112131415161718192021222324252627282930func reverseStr(s string, k int) string &#123;    str:=[]byte(s)    last:=len(str)
         </div>
       </a>
 
@@ -550,8 +456,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-07-10 21:58" pubdate>
-              2024-07-10
+            <time datetime="2024-07-30 21:31" pubdate>
+              2024-07-30
             </time>
           </div>
         
@@ -578,6 +484,13 @@
           </div>
         
         
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/">#字符串</a>
+            
+          </div>
+        
       </div>
     </article>
   </div>
@@ -588,15 +501,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/07/10/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" target="_self">
-          二分查找
+        <a href="/2024/07/30/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" target="_self">
+          分布式锁
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/10/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/30/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" target="_self">
         <div>
-          二分查找学习思路mid代表数组中间的值下标，target&gt;num[mid],说明在mid右边, target&lt;num[mid],说明在mid左边, 等于mid,返回mid  代码1234567891011121314151617181920func search(nums []int, target int) int &#123;   //二分查找   //mid代表数组中间的值下标，
+          分布式锁分布式锁实现要点加锁：在加锁时要加上拥有者和过期时间，拥有者是为了在解锁时只释放自己的锁，过期时间是为了防止加锁后出现故障没法解锁进行兜底 解锁：要先判断owner，是自己的才解锁，同时要保证这两步的原子性，可以使用lua脚本来保证 为什么要引入owner要保证锁的对称性，也就是只能释放自己的锁，不能释放别人的锁，举个例子，有两个进程A，B，A获取锁后，由于某些原因暂停执行，然后锁过期，这
         </div>
       </a>
 
@@ -604,8 +517,252 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-07-10 20:57" pubdate>
-              2024-07-10
+            <time datetime="2024-07-30 09:25" pubdate>
+              2024-07-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis%E5%AD%A6%E4%B9%A0/">#redis学习</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/30/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/" target="_self">
+          缓存一致性问题
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/30/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/" target="_self">
+        <div>
+          缓存一致性问题什么是缓存一致性问题更新数据库时，缓存如何和数据库的数据保持一致的问题 应用旁路缓存，你是怎么处理缓存一致性问题的用过期时间兜底，更新数据库数据时删除缓存数据来保持缓存一致，我也尝试过使用binlog，但是还要引入消费队列，收益不太明显，就还是使用第一种方式了 binlog用在什么场景过期时间长或者不过期的key，例如某网站上的展示视频。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-30 09:05" pubdate>
+              2024-07-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/30/%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8%E5%9C%BA%E6%99%AF/" target="_self">
+          缓存异常场景
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/30/%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8%E5%9C%BA%E6%99%AF/" target="_self">
+        <div>
+          缓存异常场景缓存击穿和缓存穿透的区别缓存击穿是缓存里没有数据而数据库有数据,查找某个key时被一瞬间的流量击垮 缓存穿透是缓存和数据库都没有数据，被海量数据击垮 核心区别是一个数据是有的，不过还没来得及在缓存中生成，一个是就没有这个数据 缓存雪崩和缓存击穿的区别它们都是由key过期导致的，不同的是缓存雪崩是海量key同时过期，它们一起访问击垮数据库，缓存击穿是某个key过期，刚好对这个key有大规
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-30 08:53" pubdate>
+              2024-07-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/30/%E7%BC%93%E5%AD%98%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" target="_self">
+          缓存基础知识
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/30/%E7%BC%93%E5%AD%98%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" target="_self">
+        <div>
+          缓存基础知识怎么应用缓存一般都使用旁路缓存，访问数据时先访问缓存的数据，缓存里没有数据再去数据库查找 旁路缓存的查询流程请求先去访问redis,如果redis里没有数据，就去mysql里去查找，找到了就存到缓存里，然后返回找到的数据 设置缓存的常用命令set key value
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-30 08:46" pubdate>
+              2024-07-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/26/%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" target="_self">
+          三数之和
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/26/%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" target="_self">
+        <div>
+          三数之和思路之前做过，很快就想到是排序+双指针，但是题目要求不能重复，在去重这一步卡了，在去重第一个数a时，考虑它和它前一个数是不是相同，如果相同，跳过。在去除第二个数b,第三个数c时，考虑a+b+c&#x3D;&#x3D;0时的情况，这时候才去重，如果b和它前面相同，去重，如果c和它后边相同，去重。 代码1234567891011121314151617181920212223242526272
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-26 22:33" pubdate>
+              2024-07-26
             </time>
           </div>
         
@@ -632,38 +789,12 @@
           </div>
         
         
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/05/04/%E7%89%A9%E7%90%86%E6%9C%BAqt%E7%A8%8B%E5%BA%8F%E8%BF%9E%E6%8E%A5%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9E%E4%B8%8D%E4%B8%8A/" target="_self">
-          物理机qt程序连接虚拟机服务器连不上
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/05/04/%E7%89%A9%E7%90%86%E6%9C%BAqt%E7%A8%8B%E5%BA%8F%E8%BF%9E%E6%8E%A5%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9E%E4%B8%8D%E4%B8%8A/" target="_self">
-        <div>
-          #qt程序连不上虚拟机的服务器 ##只需要将服务器的ip设为0.0.0.0即可，这样才能够允许端口被访问
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-05-04 13:15" pubdate>
-              2024-05-04
-            </time>
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/">#双指针</a>
+            
           </div>
-        
-        
         
       </div>
     </article>
@@ -675,15 +806,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/02/22/136243240/" target="_self">
-          调用ffmpeg转化格式，问题汇总
+        <a href="/2024/07/26/AOF%E4%BC%98%E5%8C%96/" target="_self">
+          AOF优化
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/02/22/136243240/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/26/AOF%E4%BC%98%E5%8C%96/" target="_self">
         <div>
-          文章浏览阅读61次。https://chat.openai.com/share/a8a36134-07e3-4daa-9db7-3333b04fad07
+          AOF优化什么是混合持久化在AOF重写时，子进程以将此时的数据以rdb形式写入新的AOF文件，如果此时有新的写入命令，就将新写入的数据追加到新的AOF文件，此时的AOF文件就是RDB和AOF组成的日志文件。 为什么需要混合持久化混合持久化实际上是AOF持久化的优化，子进程将内存中的数据以rdb形式加入新的AOF文件中，如果有新的命令写入，则以普通AOF的形式写入到新的AOF文件中。这样做好处就是既
         </div>
       </a>
 
@@ -691,45 +822,40 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-02-22 13:33" pubdate>
-              2024-02-22
+            <time datetime="2024-07-26 12:26" pubdate>
+              2024-07-26
             </time>
           </div>
         
         
-        
-      </div>
-    </article>
-  </div>
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
 
-  <div class="row mx-auto index-card">
+<span class="category-chains">
+  
+  
     
+      <span class="category-chain">
+        
+  <a href="/categories/redis%E5%AD%A6%E4%B9%A0/" class="category-chain-item">redis学习</a>
+  
+  
+
+      </span>
     
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/02/21/vscode%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8Avmware/" target="_self">
-          vscode连接不上vmware
-        </a>
-      </h2>
+  
+</span>
 
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/02/21/vscode%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8Avmware/" target="_self">
-        <div>
-          ##报错现象有时，我们在ssh连接到某台server时，会出现REMOTE HOST IDENTIFICATION HAS CHANGED报错，比如: ##出现原因WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! 翻译过来就是 警告：远程主机标识已更改！ 此报错是由于远程的主机的公钥发生了变化导致的。 ssh服务是通过公钥和私钥来进行连接的，它会把每
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-02-21 12:46" pubdate>
-              2024-02-21
-            </time>
           </div>
         
         
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redis/">#redis</a>
+            
+          </div>
         
       </div>
     </article>
@@ -739,7 +865,7 @@
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/#board">5</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
